@@ -1,1 +1,3 @@
-# Owner-avatar-ShowYourHeart-data-scripts
+# ShowYourHeart-data-scripts
+
+DBT scripts for Show your heart
