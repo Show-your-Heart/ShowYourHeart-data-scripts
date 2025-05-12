@@ -13,7 +13,7 @@ with ans as (
     , case when fbp.valca is null
         then fbp.vales
         else fbp.valca
-     end as answer_block_name
+     end as block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
     , unnest( (string_to_array(replace(replace(a.value,'[',''),']',''),','))) as value
