@@ -22,7 +22,7 @@ with ans as (
     , m."MODULE_KEY"
     from {{ source('dwhec', 'questions')}} q
         join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
-        join {{ source('dwhec', 'answers')}}  a on a.id_question = q."ID"
+        join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
         join {{ source('dwhec', 'module_form_block_question')}} mf on mf.id_question=q."ID"
         join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
         join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
@@ -63,7 +63,7 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , m."MODULE_KEY"  as answer_module_key
 from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
-    join {{ source('dwhec', 'answers')}}  a on a.id_question = q."ID"
+    join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
     join {{ source('dwhec', 'module_form_block_question')}} mf on mf.id_question=q."ID"
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
@@ -111,7 +111,7 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , m."MODULE_KEY"
 from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
-    join {{ source('dwhec', 'answers')}}  a on a.id_question = q."ID"
+    join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
     join {{ source('dwhec', 'module_form_block_question')}} mf on mf.id_question=q."ID"
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
