@@ -10,9 +10,10 @@ with ans as (
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as parent_block_name
-    , coalesce( jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
-        , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
-     ) as block_name
+    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
+        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
+        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+     end as answer_block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
     , unnest( (string_to_array(replace(replace(a.value,'[',''),']',''),','))) as value
@@ -47,8 +48,10 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'  as answer_single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_parent_block_name
-    ,coalesce(jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
-        , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}') as answer_block_name
+    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
+        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
+        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+     end as answer_block_name
     , a.value as answer_value
     , q."QUESTIONTYPE" as answer_question_type
     , unnest(case when q."QUESTIONTYPE" like 'Gender%' then (string_to_array(replace(replace(a.value,'[',''),']',''),',')) end) as answer_value_number
@@ -84,8 +87,10 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'  as answer_single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_parent_block_name
-    ,coalesce(jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
-        , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}') as answer_block_name
+    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
+        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
+        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+     end as answer_block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
     , case when q."QUESTIONTYPE" in ('Number', 'Decimal') then nullif(a.value,'N/A') end as value_number
@@ -131,11 +136,13 @@ select
     , a.value_origin
     , a."QUESTIONTYPE"
     , null
-    , coalesce(jsonb_path_query(c.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}', a.value)
+    , coalesce(c.value', a.value)
     , null
     , null
     , a."year" , a.id_entity
     , a."MODULE_KEY"
 from ans a
-    left join {{ source('dwhec', 'custom_list_item')}} c on a.value=c."ID"::varchar
+    left join
+        (select c."ID", jsonb_path_query(c.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as value
+        from  {{ source('dwhec', 'custom_list_item')}} c) c on a.value=c."ID"::varchar
 where a.value not in ('')
