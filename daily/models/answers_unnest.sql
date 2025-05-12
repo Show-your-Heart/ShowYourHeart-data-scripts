@@ -97,7 +97,8 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
                 jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
             else
                 jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
-            end as val_text
+            end
+      end as val_text
     , case when q."QUESTIONTYPE" in ('Boolean') then a.value end as val_boolean
     , null as genders
     , c.year
