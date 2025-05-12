@@ -96,7 +96,9 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
      end as answer_block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
-    , case when q."QUESTIONTYPE" in ('Number', 'Decimal') then nullif(a.value,'N/A') end as value_number
+    , case when q."QUESTIONTYPE" in ('Number', 'Decimal') and  a.value not like '%E%' then
+        nullif(nullif(nullif(a.value,'N/A'),'[,,,]'),'')
+     end as value_number
     , case when q."QUESTIONTYPE" in ('Text', 'SingleText') then a.value
         when q."QUESTIONTYPE" in ('Radio') then
         case when
