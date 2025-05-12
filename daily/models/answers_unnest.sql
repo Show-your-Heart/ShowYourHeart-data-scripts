@@ -137,8 +137,8 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
     left join
         (select *
-        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'=='' as valca
-        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'=='' as vales
+        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
+        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as vales
         from {{ source('dwhec', 'custom_list_item')}} cu
       ) cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
 where 1=1
