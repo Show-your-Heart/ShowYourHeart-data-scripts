@@ -6,5 +6,5 @@
 
 
 select *
-, jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+, jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
 from {{ source('dwhec', 'answers')}} cu

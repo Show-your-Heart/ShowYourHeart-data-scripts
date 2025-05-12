@@ -63,7 +63,8 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , m."MODULE_KEY"  as answer_module_key
 from (select *
         , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
-        from {{ source('dwhec', 'questions')}} q) q
+        from {{ source('dwhec', 'questions')}} q
+        ) q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
     join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
     join {{ source('dwhec', 'module_form_block_question')}} mf on mf.id_question=q."ID"
