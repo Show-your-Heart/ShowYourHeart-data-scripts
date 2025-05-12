@@ -27,12 +27,7 @@ with ans as (
         join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
         join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
         left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-        left join
-        (select *
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
-        from {{ source('dwhec', 'form_blocks')}} fbp
-        ) fbp on mfbp.id_form_block=fbp."ID"
+        left join {{ ref('aux_form_blocks') }} fbp on mfbp.id_form_block=fbp."ID"
         --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
         join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
         join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
@@ -73,12 +68,7 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
     left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-    left join
-        (select *
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
-        from {{ source('dwhec', 'form_blocks')}} fbp
-        ) fbp on mfbp.id_form_block=fbp."ID"
+    left join {{ ref('aux_form_blocks') }} fbp on mfbp.id_form_block=fbp."ID"
     --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
     join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
@@ -126,21 +116,11 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
     left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-    left join
-        (select *
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
-            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
-        from {{ source('dwhec', 'form_blocks')}} fbp
-        ) fbp on mfbp.id_form_block=fbp."ID"
+    left join {{ ref('aux_form_blocks') }} fbp on mfbp.id_form_block=fbp."ID"
     --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
     join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
-    left join
-        (select *
-        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
-        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as vales
-        from {{ source('dwhec', 'custom_list_item')}} cu
-      ) cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
+    left join {{ ref('aux_custom_list_item')}} cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
 where 1=1
     --and c.year =2024
     --and m."MODULE_KEY" ='BS-XES'
@@ -156,15 +136,11 @@ select
     , a.value_origin
     , a."QUESTIONTYPE"
     , null
-    , coalesce(c.value, a.value)
+    , coalesce(c.valca, c.vales, a.value)
     , null
     , null
     , a."year" , a.id_entity
     , a."MODULE_KEY"
 from ans a
-    left join
-        (
-            select c."ID", jsonb_path_query(c.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as value
-            from  {{ source('dwhec', 'custom_list_item')}} c
-        ) c on a.value=c."ID"::varchar
+    left join {{ ref('aux_custom_list_item')}} c on a.value=c."ID"::varchar
 where a.value not in ('')
