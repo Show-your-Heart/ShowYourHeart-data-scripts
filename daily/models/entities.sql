@@ -5,13 +5,14 @@
 
 
 
-select e."ID", e."ADDRESS", e."CP", e.description, e."EMAIL", e.name, e."NIF", e."PHONE", e."WEB"
-, (((lf.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' as legal_form
-, (((s.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'as sector
-, t."ID" id_town, (((t.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as town
-, r."ID" as id_comarca, (((r.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as comarca
-, p."ID" as id_provincia, (((p.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as provincia
-, ac."ID" as id_ccaa, (((ac.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as ccaa
+select e."ID" as id_entity, e."ADDRESS" as entity_address, e."CP" as entity_cp, e.description as entity_description
+, e."EMAIL" as entity_email, e.name as entity_name, e."NIF" as entity_nif, e."PHONE" as entity_phone, e."WEB" as entity_web
+, (((lf.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' as entity_legal_form
+, (((s.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'as entity_sector
+, t."ID" id_town, (((t.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as entity_town
+, r."ID" as id_comarca, (((r.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as entity_comarca
+, p."ID" as id_provincia, (((p.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as entity_provincia
+, ac."ID" as id_ccaa, (((ac.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as entity_ccaa
 from {{ source('dwhec', 'entities')}} e
 join {{ source('dwhec', 'user')}} u on e.id_user = u."ID"
 join {{ source('dwhec', 'legal_forms')}} lf on e.id_legal_form = lf."ID"

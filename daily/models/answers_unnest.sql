@@ -48,8 +48,9 @@ with ans as (
 
 
 -- GENDER & GENDER DECIMAL
-select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.question_index
-    , q."ID", q."QUESTION_KEY"
+select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_blocindex
+    , mf.question_index  as answer_question_index
+    , q."ID" as  as answer_question_id, q."QUESTION_KEY" as  as answer_question_key
     , case when (((q.name::jsonb)->>'texts')::jsonb->>0)::jsonb->>'la' ='ca' then
         (((q.name::jsonb)->>'texts')::jsonb->>0)::jsonb->>'text'
         when (((q.name::jsonb)->>'texts')::jsonb->>1)::jsonb->>'la' ='ca' then
@@ -59,19 +60,19 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
         when (((q.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'la' ='ca' then
             (((q.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'
         end
-     as question_name
-     , (((fb.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'  as single_block_name
-    ,(((fbp.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' as parent_block_name
-    ,coalesce((((fbp.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text', (((fb.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' ) as block_name
-    , a.value
-    , q."QUESTIONTYPE"
-    , unnest(case when q."QUESTIONTYPE" like 'Gender%' then (string_to_array(replace(replace(a.value,'[',''),']',''),',')) end) as value_number
-    , null as value_text
-    , null as value_boolean
-    , unnest('{d,h,nb}'::varchar[]) as genders
-    , c.year
-    , a.id_entity
-    , m."MODULE_KEY"
+     as answer_question_name
+     , (((fb.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'  as answer_single_block_name
+    ,(((fbp.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' as answer_parent_block_name
+    ,coalesce((((fbp.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text', (((fb.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' ) as answer_block_name
+    , a.value as answer_value
+    , q."QUESTIONTYPE" as answer_question_type
+    , unnest(case when q."QUESTIONTYPE" like 'Gender%' then (string_to_array(replace(replace(a.value,'[',''),']',''),',')) end) as answer_value_number
+    , null as answer_value_text
+    , null as answer_value_boolean
+    , unnest('{d,h,nb}'::varchar[]) as answer_genders
+    , c.year as answer_year
+    , a.id_entity as id_entity
+    , m."MODULE_KEY"  as answer_module_key
 from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
     join {{ source('dwhec', 'answers')}}  a on a.id_question = q."ID"
