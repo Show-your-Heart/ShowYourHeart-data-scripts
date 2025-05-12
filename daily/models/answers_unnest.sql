@@ -45,9 +45,9 @@ with ans as (
 select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_blocindex
     , mf.question_index  as answer_question_index
     , q."ID" as answer_question_id, q."QUESTION_KEY" as answer_question_key
-    , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
-    , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'  as answer_single_block_name
-    , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_parent_block_name
+    , answer_question_name as answer_question_name
+    , fb.valca  as answer_single_block_name
+    , fbp.valca as answer_parent_block_name
     , case when fbp.valca is null
         then fbp.vales
         else fbp.valca
@@ -61,12 +61,14 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , c.year as answer_year
     , a.id_entity as id_entity
     , m."MODULE_KEY"  as answer_module_key
-from {{ source('dwhec', 'questions')}} q
+from (select *
+        , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
+        from {{ source('dwhec', 'questions')}} q) q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
     join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
     join {{ source('dwhec', 'module_form_block_question')}} mf on mf.id_question=q."ID"
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
-    join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
+    join {{ ref('aux_form_blocks') }} fb on mfb.id_form_block=fb."ID"
     left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
     left join {{ ref('aux_form_blocks') }} fbp on mfbp.id_form_block=fbp."ID"
     --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
