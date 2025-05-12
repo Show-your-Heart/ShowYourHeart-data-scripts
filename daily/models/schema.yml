@@ -5,3 +5,28 @@ sources:
     database: dwh
     schema: public
     tables: []
+  - name: dwhec
+    database: dwh
+    schema: ec
+    tables:
+      - answers
+      - autonomous_community
+      - campaigns
+      - custom_list_item
+      - district
+      - entities
+      - entity_module
+      - entity_state
+      - form_blocks
+      - legal_forms
+      - module_form_block
+      - module_form_block_question
+      - modules
+      - neighbourhood
+      - provinces
+      - questions
+      - regions
+      - sectors
+      - towns
+      - user
+

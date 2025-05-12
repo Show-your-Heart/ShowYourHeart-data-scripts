@@ -1,0 +1,27 @@
+{{ config(materialized='table'
+, tags=[ "EC"]
+, docs={'node_color': '#f09df3'}
+) }}
+
+
+
+select e."ID", e."ADDRESS", e."CP", e.description, e."EMAIL", e.name, e."NIF", e."PHONE", e."WEB"
+, (((lf.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text' as legal_form
+, (((s.name::jsonb)->>'texts')::jsonb->>3)::jsonb->>'text'as sector
+, t."ID" id_town, (((t.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as town
+, r."ID" as id_comarca, (((r.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as comarca
+, p."ID" as id_provincia, (((p.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as provincia
+, ac."ID" as id_ccaa, (((ac.name::jsonb)->>'texts')::jsonb->>2)::jsonb->>'text' as ccaa
+from {{ source('dwhec', 'entities')}} e
+join {{ source('dwhec', 'user')}} u on e.id_user = u."ID"
+join {{ source('dwhec', 'legal_forms')}} lf on e.id_legal_form = lf."ID"
+join {{ source('dwhec', 'sectors')}} s on e.id_sector = s."ID"
+join {{ source('dwhec', 'entity_state')}} es on e.id_bs_state = es."ID"
+join {{ source('dwhec', 'towns')}} t on e.id_town = t."ID"
+join {{ source('dwhec', 'regions')}} r on t.id_region = r."ID"
+join {{ source('dwhec', 'provinces')}} p on r.id_province = p."ID"
+join {{ source('dwhec', 'entity_state')}} es2 on e.id_xes_state = es2."ID"
+join {{ source('dwhec', 'autonomous_community')}} ac on e.id_autonomous_community = ac."ID"
+left join {{ source('dwhec', 'neighbourhood')}} n on e.id_neighbourhood = n.id
+left join {{ source('dwhec', 'district')}} d on n.id_district = d.id
+left join {{ source('dwhec', 'sectors')}} s2 on e.id_secondary_sector = s2."ID"
