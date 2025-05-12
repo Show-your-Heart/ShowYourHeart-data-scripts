@@ -9,24 +9,24 @@ sources:
     database: dwh
     schema: ec
     tables:
-      - answers
-      - autonomous_community
-      - campaigns
-      - custom_list_item
-      - district
-      - entities
-      - entity_module
-      - entity_state
-      - form_blocks
-      - legal_forms
-      - module_form_block
-      - module_form_block_question
-      - modules
-      - neighbourhood
-      - provinces
-      - questions
-      - regions
-      - sectors
-      - towns
-      - user
+      - name: answers
+      - name: autonomous_community
+      - name: campaigns
+      - name: custom_list_item
+      - name: district
+      - name: entities
+      - name: entity_module
+      - name: entity_state
+      - name: form_blocks
+      - name: legal_forms
+      - name: module_form_block
+      - name: module_form_block_question
+      - name: modules
+      - name: neighbourhood
+      - name: provinces
+      - name: questions
+      - name: regions
+      - name: sectors
+      - name: towns
+      - name: user
 
