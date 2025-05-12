@@ -10,9 +10,9 @@ with ans as (
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as parent_block_name
-    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
-        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
-        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+    , case when fbp.valca is null
+        then fbp.vales
+        else fbp.valca
      end as answer_block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
@@ -27,7 +27,12 @@ with ans as (
         join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
         join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
         left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-        left join {{ source('dwhec', 'form_blocks')}} fbp on mfbp.id_form_block=fbp."ID"
+        left join
+        (select *
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
+        from {{ source('dwhec', 'form_blocks')}} fbp
+        ) fbp on mfbp.id_form_block=fbp."ID"
         --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
         join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
         join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
@@ -48,9 +53,9 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'  as answer_single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_parent_block_name
-    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
-        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
-        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+    , case when fbp.valca is null
+        then fbp.vales
+        else fbp.valca
      end as answer_block_name
     , a.value as answer_value
     , q."QUESTIONTYPE" as answer_question_type
@@ -68,7 +73,12 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
     left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-    left join {{ source('dwhec', 'form_blocks')}} fbp on mfbp.id_form_block=fbp."ID"
+    left join
+        (select *
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
+        from {{ source('dwhec', 'form_blocks')}} fbp
+        ) fbp on mfbp.id_form_block=fbp."ID"
     --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
     join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
@@ -87,9 +97,9 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
     , jsonb_path_query(fb.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'  as answer_single_block_name
     , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_parent_block_name
-    , case when jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' is null
-        then jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
-        else jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+    , case when fbp.valca is null
+        then fbp.vales
+        else fbp.valca
      end as answer_block_name
     , a.value as value_origin
     , q."QUESTIONTYPE"
@@ -97,11 +107,11 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , case when q."QUESTIONTYPE" in ('Text', 'SingleText') then a.value
         when q."QUESTIONTYPE" in ('Radio') then
         case when
-            jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'==''
+            cu.valca=''
             then
-                jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}'
+                cu.vales
             else
-                jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'
+                cu.valca
             end
       end as val_text
     , case when q."QUESTIONTYPE" in ('Boolean') then a.value end as val_boolean
@@ -116,11 +126,21 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'module_form_block')}} mfb on mf.id_module_form_block=mfb."id"
     join {{ source('dwhec', 'form_blocks')}} fb on mfb.id_form_block=fb."ID"
     left join {{ source('dwhec', 'module_form_block')}} mfbp on mfb.id_parent=mfbp."id"
-    left join {{ source('dwhec', 'form_blocks')}} fbp on mfbp.id_form_block=fbp."ID"
+    left join
+        (select *
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as valca
+            , jsonb_path_query(fbp.name::jsonb, '$.texts[*] ? (@.la == "es").text') #>> '{}' as vales
+        from {{ source('dwhec', 'form_blocks')}} fbp
+        ) fbp on mfbp.id_form_block=fbp."ID"
     --left join form_blocks fbp on fb."ID_PARENT"=fbp."ID"
     join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
-    left join {{ source('dwhec', 'custom_list_item')}} cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
+    left join
+        (select *
+        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'=='' as valca
+        , jsonb_path_query(cu.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}'=='' as vales
+        from {{ source('dwhec', 'custom_list_item')}} cu
+      ) cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
 where 1=1
     --and c.year =2024
     --and m."MODULE_KEY" ='BS-XES'
