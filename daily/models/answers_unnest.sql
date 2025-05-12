@@ -130,19 +130,21 @@ where 1=1
 
 
 union all
--- NoT NUMBER RADIO DECIMAL TEXT SIGNLETEXT BOOLEAN GENDER*
+-- NOT NUMBER RADIO DECIMAL TEXT SIGNLETEXT BOOLEAN GENDER*
 select
     a."index" , a.question_index , a."ID" , a."QUESTION_KEY" , a.question_name , a.single_block_name , a.parent_block_name , a.block_name
     , a.value_origin
     , a."QUESTIONTYPE"
     , null
-    , coalesce(c.value', a.value)
+    , coalesce(c.value, a.value)
     , null
     , null
     , a."year" , a.id_entity
     , a."MODULE_KEY"
 from ans a
     left join
-        (select c."ID", jsonb_path_query(c.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as value
-        from  {{ source('dwhec', 'custom_list_item')}} c) c on a.value=c."ID"::varchar
+        (
+            select c."ID", jsonb_path_query(c.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as value
+            from  {{ source('dwhec', 'custom_list_item')}} c
+        ) c on a.value=c."ID"::varchar
 where a.value not in ('')
