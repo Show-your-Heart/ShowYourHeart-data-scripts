@@ -50,7 +50,7 @@ with ans as (
 -- GENDER & GENDER DECIMAL
 select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_blocindex
     , mf.question_index  as answer_question_index
-    , q."ID" as  as answer_question_id, q."QUESTION_KEY" as  as answer_question_key
+    , q."ID" as answer_question_id, q."QUESTION_KEY" as answer_question_key
     , case when (((q.name::jsonb)->>'texts')::jsonb->>0)::jsonb->>'la' ='ca' then
         (((q.name::jsonb)->>'texts')::jsonb->>0)::jsonb->>'text'
         when (((q.name::jsonb)->>'texts')::jsonb->>1)::jsonb->>'la' ='ca' then
