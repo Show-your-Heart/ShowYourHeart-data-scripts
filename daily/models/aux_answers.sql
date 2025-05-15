@@ -8,9 +8,9 @@
 
 select "ID", fixed_value, value, "version", id_campaign, id_email, id_entity, id_question, id_last_answer
 from {{ source('dwhec', 'answers')}} cu
-
-{% if is_incremental() %}
-
-where id_campaign = date_part('year', current_date)
-
-{% endif %}
+--
+--{% if is_incremental() %}
+--
+--where id_campaign = date_part('year', current_date)
+--
+--{% endif %}
