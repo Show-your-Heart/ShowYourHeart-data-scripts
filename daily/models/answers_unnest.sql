@@ -1,4 +1,5 @@
-{{ config(materialized='table'
+{{ config(materialized='incremental'
+, unique_key='answer_year'
 , tags=[ "EC"]
 , docs={'node_color': '#f09df3'}
 ) }}
@@ -20,6 +21,7 @@ with ans as (
     , c.year
     , a.id_entity
     , m."MODULE_KEY"
+    , m."ID" as id_module
     from {{ source('dwhec', 'questions')}} q
         join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
         join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
@@ -32,7 +34,11 @@ with ans as (
         join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
         join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
     where 1=1
---    and c.year =2024
+
+    {% if is_incremental() %}
+    and c.year  >= date_part('year', current_date()-300)
+    {% endif %}
+
 --    and m."MODULE_KEY" ='BS-XES'
     --and q."QUESTIONTYPE"  in ('Gender', 'GenderDecimal')
     and q."QUESTIONTYPE" not in ('Gender', 'Number', 'Radio', 'Text', 'Boolean', 'GenderDecimal', 'Decimal', 'SingleText')
@@ -57,10 +63,11 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , unnest(case when q."QUESTIONTYPE" like 'Gender%' then (string_to_array(replace(replace(a.value,'[',''),']',''),',')) end) as answer_value_number
     , null as answer_value_text
     , null as answer_value_boolean
-    , unnest('{d,h,nb}'::varchar[]) as answer_genders
+    , unnest('{d,h,a}'::varchar[]) as answer_genders
     , c.year as answer_year
     , a.id_entity as id_entity
     , m."MODULE_KEY"  as answer_module_key
+    , m."ID" as answer_id_module
 from (select *
         , jsonb_path_query(q.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as answer_question_name
         from {{ source('dwhec', 'questions')}} q
@@ -76,7 +83,11 @@ from (select *
     join {{ source('dwhec', 'modules')}} m on mfb.id_module=m."ID"
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
 where 1=1
-    --and c.year =2024
+
+    {% if is_incremental() %}
+    and c.year >= date_part('year', current_date()-300)
+    {% endif %}
+
     --and m."MODULE_KEY" ='BS-XES'
     and q."QUESTIONTYPE"  in ('Gender', 'GenderDecimal')
     and value is not null
@@ -114,6 +125,7 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , c.year
     , a.id_entity
     , m."MODULE_KEY"
+    , m."ID" as answer_id_module
 from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'campaigns')}} c on q.id_campaign = c."ID"
     join {{ ref('aux_answers')}}  a on a.id_question = q."ID"
@@ -127,7 +139,11 @@ from {{ source('dwhec', 'questions')}} q
     join {{ source('dwhec', 'entity_module')}} em on em.id_module = m."ID" and em.id_entity =  a.id_entity
     left join {{ ref('aux_custom_list_item')}} cu on case when q."QUESTIONTYPE" in ('Radio') then a.value end=cu."ID"::varchar
 where 1=1
-    --and c.year =2024
+
+    {% if is_incremental() %}
+    and c.year  >= date_part('year', current_date()-300)
+    {% endif %}
+
     --and m."MODULE_KEY" ='BS-XES'
     and q."QUESTIONTYPE"  in ('Number','Radio', 'Decimal','Text', 'SingleText','Boolean')
     and a.value is not null
@@ -146,6 +162,7 @@ select
     , null
     , a."year" , a.id_entity
     , a."MODULE_KEY"
+    , a."ID" as id_module
 from ans a
     left join {{ ref('aux_custom_list_item')}} c on a.value=c."ID"::varchar
 where a.value not in ('')
