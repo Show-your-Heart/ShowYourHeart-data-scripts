@@ -11,6 +11,6 @@ from {{ source('dwhec', 'answers')}} cu
 
 {% if is_incremental() %}
 
-where id_campaign = date_part('year', current_date())
+where id_campaign = date_part('year', current_date)
 
 {% endif %}

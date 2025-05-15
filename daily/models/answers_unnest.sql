@@ -36,7 +36,7 @@ with ans as (
     where 1=1
 
     {% if is_incremental() %}
-    and c.year  >= date_part('year', current_date()-300)
+    and c.year  >= date_part('year', current_date-300)
     {% endif %}
 
 --    and m."MODULE_KEY" ='BS-XES'
@@ -85,7 +85,7 @@ from (select *
 where 1=1
 
     {% if is_incremental() %}
-    and c.year >= date_part('year', current_date()-300)
+    and c.year >= date_part('year', current_date-300)
     {% endif %}
 
     --and m."MODULE_KEY" ='BS-XES'
@@ -141,7 +141,7 @@ from {{ source('dwhec', 'questions')}} q
 where 1=1
 
     {% if is_incremental() %}
-    and c.year  >= date_part('year', current_date()-300)
+    and c.year  >= date_part('year', current_date-300)
     {% endif %}
 
     --and m."MODULE_KEY" ='BS-XES'
