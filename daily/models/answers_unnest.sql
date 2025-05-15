@@ -19,6 +19,7 @@ with ans as (
     , q."QUESTIONTYPE"
     , unnest( (string_to_array(replace(replace(a.value,'[',''),']',''),','))) as value
     , c.year
+    , c."ID" as id_campaign
     , a.id_entity
     , m."MODULE_KEY"
     , m."ID" as id_module
@@ -65,6 +66,7 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as answer_form_bloci
     , null as answer_value_boolean
     , unnest('{d,h,a}'::varchar[]) as answer_genders
     , c.year as answer_year
+    , c."ID" as id_campaign
     , a.id_entity as id_entity
     , m."MODULE_KEY"  as answer_module_key
     , m."ID" as answer_id_module
@@ -123,6 +125,7 @@ select coalesce(mfbp.form_block_index,mfb.form_block_index) as index, mf.questio
     , case when q."QUESTIONTYPE" in ('Boolean') then a.value end as val_boolean
     , null as genders
     , c.year
+    , c."ID" as id_campaign
     , a.id_entity
     , m."MODULE_KEY"
     , m."ID" as answer_id_module
@@ -160,7 +163,9 @@ select
     , coalesce(c.valca, c.vales, a.value)
     , null
     , null
-    , a."year" , a.id_entity
+    , a."year"
+    , a.id_campaign
+    , a.id_entity
     , a."MODULE_KEY"
     , a."ID" as id_module
 from ans a
