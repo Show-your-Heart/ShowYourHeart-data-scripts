@@ -1,16 +1,9 @@
-{{ config(materialized='incremental'
-, unique_key='id_campaign'
+{{ config(materialized='table'
 , tags=[ "EC"]
 , docs={'node_color': '#f09df3'}
 ) }}
 
 
 
-select "ID", fixed_value, value, "version", id_campaign, id_email, id_entity, id_question, id_last_answer
-from {{ source('dwhec', 'answers')}} cu
---
---{% if is_incremental() %}
---
---where id_campaign = date_part('year', current_date)
---
---{% endif %}
+select a."ID", a.fixed_value, a.value, a."version", a.id_campaign, a.id_email, a.id_entity, a.id_question, a.id_last_answer
+from {{ source('dwhec', 'answers')}} a
