@@ -21,6 +21,11 @@ join {{ source('dwhec', 'indicators')}} i on iv.id_indicator = i."ID" and m.id_c
 where 1=1
 --and id_entity =2809
 and i.value_type ilike '%gender%'
+
+    {% if is_incremental() %}
+    and c.year >= date_part('year', current_date-300)
+    {% endif %}
+
 union all
 select emi."ID" id_module_info, emi.closed_date as module_info_closed_date , emi.start_date as module_info_start_date
 , emi."STATE" as module_info_state, emi.id_entity,  m."MODULE_KEY",c.year
@@ -39,5 +44,8 @@ where 1=1
 --and id_entity =2809
 and i.value_type  in ('Number', 'Decimal')
 and iv.value is not null
-and iv.value  ~ '^-?[0-9]+(\.[0-9]+)?$';
+and iv.value  ~ '^-?[0-9]+(\.[0-9]+)?$'
 
+    {% if is_incremental() %}
+    and c.year >= date_part('year', current_date-300)
+    {% endif %}
