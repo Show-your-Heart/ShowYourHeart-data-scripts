@@ -16,8 +16,11 @@ sources:
       - name: district
       - name: entities
       - name: entity_module
+      - name: entity_module_info
       - name: entity_state
       - name: form_blocks
+      - name: indicators
+      - name: indicator_value
       - name: legal_forms
       - name: module_form_block
       - name: module_form_block_question
