@@ -16,7 +16,7 @@ select emi."ID" id_module_info, emi.closed_date as module_info_closed_date , emi
 from {{ source('dwhec', 'entity_module_info')}} emi
 join {{ source('dwhec', 'modules')}} m on emi.id_module = m."ID"
 join {{ source('dwhec', 'campaigns')}} c on m.id_campaign = c."ID"
-join {{ source('dwhec', 'indicator_value')}} iv on emi."ID"=iv.id_module_info
+join {{ ref('aux_indicator_value')}} iv on emi."ID"=iv.id_module_info
 join {{ source('dwhec', 'indicators')}} i on iv.id_indicator = i."ID" and m.id_campaign = i.id_campaign
 where 1=1
 --and id_entity =2809
@@ -38,7 +38,7 @@ select emi."ID" id_module_info, emi.closed_date as module_info_closed_date , emi
 from {{ source('dwhec', 'entity_module_info')}} emi
 join {{ source('dwhec', 'modules')}} m on emi.id_module = m."ID"
 join {{ source('dwhec', 'campaigns')}} c on m.id_campaign = c."ID"
-join {{ source('dwhec', 'indicator_value')}} iv on emi."ID"=iv.id_module_info
+join {{ ref('aux_indicator_value')}} iv on emi."ID"=iv.id_module_info
 join {{ source('dwhec', 'indicators')}} i on iv.id_indicator = i."ID" and m.id_campaign = i.id_campaign
 where 1=1
 --and id_entity =2809
