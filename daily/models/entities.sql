@@ -16,14 +16,14 @@ select e."ID" as id_entity, e."ADDRESS" as entity_address, e."CP" as entity_cp, 
 , e.id_user as entity_id_user
 , es."ID" as id_status, jsonb_path_query(es."NAME"::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as entity_status
 from {{ source('dwhec', 'entities')}} e
-join {{ source('dwhec', 'user')}} u on e.id_user = u."ID"
-join {{ source('dwhec', 'legal_forms')}} lf on e.id_legal_form = lf."ID"
-join {{ source('dwhec', 'sectors')}} s on e.id_sector = s."ID"
-join {{ source('dwhec', 'entity_state')}} es on e.id_bs_state = es."ID"
-join {{ source('dwhec', 'towns')}} t on e.id_town = t."ID"
-join {{ source('dwhec', 'regions')}} r on t.id_region = r."ID"
+left join {{ source('dwhec', 'user')}} u on e.id_user = u."ID"
+left join {{ source('dwhec', 'legal_forms')}} lf on e.id_legal_form = lf."ID"
+left join {{ source('dwhec', 'sectors')}} s on e.id_sector = s."ID"
+left join {{ source('dwhec', 'entity_state')}} es on e.id_bs_state = es."ID"
+left join {{ source('dwhec', 'towns')}} t on e.id_town = t."ID"
+left join {{ source('dwhec', 'regions')}} r on t.id_region = r."ID"
 join {{ source('dwhec', 'provinces')}} p on r.id_province = p."ID"
-join {{ source('dwhec', 'entity_state')}} es2 on e.id_xes_state = es2."ID"
+left join {{ source('dwhec', 'entity_state')}} es2 on e.id_xes_state = es2."ID"
 join {{ source('dwhec', 'autonomous_community')}} ac on e.id_autonomous_community = ac."ID"
 left join {{ source('dwhec', 'neighbourhood')}} n on e.id_neighbourhood = n.id
 left join {{ source('dwhec', 'district')}} d on n.id_district = d.id
