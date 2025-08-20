@@ -14,7 +14,7 @@ select e."ID" as id_entity, e."ADDRESS" as entity_address, e."CP" as entity_cp, 
 , p."ID" as id_provincia, jsonb_path_query(p.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as entity_provincia
 , ac."ID" as id_ccaa, jsonb_path_query(ac.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as entity_ccaa
 , e.id_user as entity_id_user
-, es."ID" as id_status, jsonb_path_query(es.name::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as entity_status
+, es."ID" as id_status, jsonb_path_query(es."NAME"::jsonb, '$.texts[*] ? (@.la == "ca").text') #>> '{}' as entity_status
 from {{ source('dwhec', 'entities')}} e
 join {{ source('dwhec', 'user')}} u on e.id_user = u."ID"
 join {{ source('dwhec', 'legal_forms')}} lf on e.id_legal_form = lf."ID"
