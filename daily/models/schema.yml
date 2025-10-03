@@ -4,7 +4,57 @@ sources:
   - name: dwhpublic
     database: dwh
     schema: public
-    tables: []
+    tables:
+      - name: syh_auth_group
+      - name: syh_auth_group_permissions
+      - name: syh_auth_permission
+      - name: syh_django_admin_log
+      - name: syh_django_content_type
+      - name: syh_django_migrations
+      - name: syh_django_session
+      - name: syh_extra_settings_setting
+      - name: syh_geodata_autonomouscommunity
+      - name: syh_geodata_city
+      - name: syh_geodata_country
+      - name: syh_geodata_province
+      - name: syh_geodata_region
+      - name: syh_geodata_zipcode
+      - name: syh_methods_campaign
+      - name: syh_methods_campaign_methods
+      - name: syh_methods_externalsurveyinvitation
+      - name: syh_methods_indicator
+      - name: syh_methods_indicator_topics
+      - name: syh_methods_indicatorresult
+      - name: syh_methods_invitation
+      - name: syh_methods_list
+      - name: syh_methods_list_items
+      - name: syh_methods_listitem
+      - name: syh_methods_method
+      - name: syh_methods_method_external_surveys
+      - name: syh_methods_method_indicators
+      - name: syh_methods_method_legal_structures
+      - name: syh_methods_method_sectors
+      - name: syh_methods_section
+      - name: syh_methods_section_indicators
+      - name: syh_methods_survey
+      - name: syh_methods_topic
+      - name: syh_organizations_organization
+      - name: syh_organizations_organization_methods
+      - name: syh_pg_stat_statements
+      - name: syh_pg_stat_statements_info
+      - name: syh_post_office_attachment
+      - name: syh_post_office_attachment_emails
+      - name: syh_post_office_email
+      - name: syh_post_office_emailtemplate
+      - name: syh_post_office_log
+      - name: syh_settings_gender
+      - name: syh_settings_legalstructure
+      - name: syh_settings_network
+      - name: syh_settings_sector
+      - name: syh_users_user
+      - name: syh_users_user_groups
+      - name: syh_users_user_user_permissions
+      - name: syh_users_userprofile
   - name: dwhec
     database: dwh
     schema: ec
