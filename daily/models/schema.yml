@@ -4,8 +4,6 @@ sources:
   - name: dwhpublic
     database: dwh
     schema: public
-    docs:
-      node_color: '#852475'
     tables:
       - name: syh_auth_group
       - name: syh_auth_group_permissions
