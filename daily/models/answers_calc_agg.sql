@@ -1,6 +1,6 @@
 {{ config(materialized='table'
 , tags=[ "SYH"]
-, docs={'node_color': '#79964D'}
+, docs={'node_color': '#C93314'}
 , post_hook=after_commit("{{ update_answers_calc_agg() }}")
 ) }}
 
