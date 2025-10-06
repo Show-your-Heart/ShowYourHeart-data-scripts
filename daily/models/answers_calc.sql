@@ -1,6 +1,7 @@
 {{ config(materialized='table'
 , tags=[ "SYH"]
 , docs={'node_color': '#C93314'}
+, post_hook=after_commit("{{ create_index_answers_calc() }}")
 ) }}
 
 with recursive method_section_hieriarchy as (
