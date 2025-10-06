@@ -1,4 +1,5 @@
-{{ config(materialized='table'
+{{ config(materialized='incremental'
+, unique_key='id_campaign'
 , tags=[ "SYH"]
 , docs={'node_color': '#C93314'}
 , post_hook=after_commit("{{ create_index_answers_calc() }}")
@@ -60,3 +61,10 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     left join {{ source('dwhpublic', 'syh_methods_indicator')}} i on si.indicator_id=i.id
     left join {{ source('dwhpublic', 'syh_methods_indicatorresult')}} ir on ir.indicator_id = i.id and ir.survey_id=s.id
  where 1=1
+       {% if is_incremental() %}
+
+      year>=(date_part('year', current_date)-1)::varchar
+
+
+      {% endif %}
+
