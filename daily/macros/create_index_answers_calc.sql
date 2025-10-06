@@ -2,11 +2,11 @@
 {% macro create_index_answers_calc() %}
 
 
-create index cix_answers_calc on {{ this } (id_campaign, id_survey, id_method, id_user, id_organization
+create index cix_answers_calc on {{ this }} (id_campaign, id_survey, id_method, id_user, id_organization
 , id_methods_section, id_indicator, project_id
 )
 
-CLUSTER {{ this } USING cix_answers_calc;
+CLUSTER {{ this }} USING cix_answers_calc;
 
 
 commit;
