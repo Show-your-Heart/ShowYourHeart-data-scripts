@@ -12,10 +12,10 @@ select id_campaign
 , max(campaign_name_eu) as campaign_name_eu
 , max(campaign_name_gl) as campaign_name_gl
 , max(campaign_name_nl) as campaign_name_nl
-, max("year") as "year", max(previous_campaign_id) as previous_campaign_id
+, max("year") as "year", max(previous_campaign_id::varchar)::uuid as previous_campaign_id
 , id_survey, max(survey_created_at) as survey_created_at, max(survey_updated_at) as survey_updated_at
 , max(status) as status
-, id_method, max(active) as active
+, id_method, bool_or(active) as active
 , max(method_name) as method_name
 , max(method_name_en) as method_name_en
 , max(method_name_ca) as method_name_ca
@@ -57,7 +57,7 @@ select id_campaign
 , max(indicator_description_eu) as indicator_description_eu
 , max(indicator_description_gl) as indicator_description_gl
 , max(indicator_description_nl) as indicator_description_nl
-, max(is_direct_indicator) as is_direct_indicator, max(indicator_category) as indicator_category
+, bool_or(is_direct_indicator) as is_direct_indicator, max(indicator_category) as indicator_category
 , max(indicator_data_type) as indicator_data_type, max(indicator_unit) as indicator_unit
 , array_agg(
 	case gender when 0 then 'Home'
@@ -71,5 +71,5 @@ select id_campaign
 		end::varchar,',')||']' end as str_gender
 , case when count(distinct gender)>0 then '['||string_agg(value,',')||']' else string_agg(value,'') end as str_value
 from {{ref('answers_calc')}}
-group by id_campaign, id_survey, id_method, id_user, id_organization
+group by id_campaign,  id_survey, id_method, id_user, id_organization
 , id_methods_section, id_indicator, project_id
