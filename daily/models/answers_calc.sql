@@ -63,7 +63,7 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
  where 1=1
        {% if is_incremental() %}
 
-      year>=(date_part('year', current_date)-1)::varchar
+      and year>=(date_part('year', current_date)-1)::varchar
 
 
       {% endif %}
