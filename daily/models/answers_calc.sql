@@ -41,7 +41,7 @@ select c.id as id_campaign
     , si.sort_value
     , i.id as id_indicator, i.project_id
         , i.name as indicator_name
-        , i.name_en as  as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
+        , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
         , i.name_eu as indicator_name_eu, i.name_es as indicator_name_es, i.name_nl as indicator_name_nl
         , i.description as indicator_description
         , i.description_en as indicator_description_en, i.description_ca as indicator_description_ca
