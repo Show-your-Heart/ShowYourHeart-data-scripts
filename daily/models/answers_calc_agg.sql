@@ -64,11 +64,12 @@ select id_campaign
 		when 1 then 'Dona'
 		when 2 then 'N/B'
 		end
+		ORDER BY gender
 ) as gender, array_agg(value) as value, count(distinct gender) as num_gender
 , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Home"'
 		when 1 then '"Dona"'
 		when 2 then '"N/B"'
-		end::varchar,',')||']' end as str_gender
+		end::varchar,',' order by gender)||']' end as str_gender
 , case when count(distinct gender)>0 then '['||string_agg(value,',')||']' else string_agg(value,'') end as str_value
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization
