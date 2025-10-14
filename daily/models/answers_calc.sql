@@ -41,7 +41,7 @@ select c.id as id_campaign
         , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
         , h.order as method_order, h.lvl as method_level, h.path_order
     , si.sort_value
-    , i.id as id_indicator, i.project_id
+    , i.id as id_indicator, i.code as indicator_code
         , i.name as indicator_name
         , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
         , i.name_eu as indicator_name_eu, i.name_es as indicator_name_es, i.name_nl as indicator_name_nl

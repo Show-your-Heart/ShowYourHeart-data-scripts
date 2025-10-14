@@ -42,7 +42,7 @@ select id_campaign
 , max(method_section_title_nl) as method_section_title_nl
 , max(method_order) as method_order, max(method_level) as method_level, max(path_order) as path_order
 , max(sort_value) as sort_value
-, id_indicator, project_id
+, id_indicator, indicator_code
 , max(indicator_name) as indicator_name
 , max(indicator_name_en) as indicator_name_en
 , max(indicator_name_ca) as indicator_name_ca
@@ -75,4 +75,4 @@ select id_campaign
 , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization
-, id_methods_section, id_indicator, project_id
+, id_methods_section, id_indicator, indicator_code
