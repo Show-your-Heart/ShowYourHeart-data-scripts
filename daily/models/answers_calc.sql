@@ -112,6 +112,7 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_organizations_organization')}} o on s.organization_id=o.id
     join {{ source('dwhpublic', 'syh_users_user')}} u on s.user_id=u.id
     join method_section_hieriarchy h on h.method_id=m.id
+    left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
 where 1=1
        {% if is_incremental() %}
 
