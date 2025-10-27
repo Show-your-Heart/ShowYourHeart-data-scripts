@@ -73,7 +73,7 @@ where 1=1
       {% endif %}
 
 union all
-select c.id as id_campaign
+select distinct c.id as id_campaign
         , c.name as campaign_name
         , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
         , c.name_eu as campaign_name_eu, c.name_es as campaign_name_es, c.name_nl as campaign_name_nl
@@ -104,7 +104,57 @@ select c.id as id_campaign
         , null as indicator_description_en, null as indicator_description_ca
         , null as indicator_description_gl, null as indicator_description_eu
         , null as indicator_description_es, null as indicator_description_nl
-    	, null::boolean, null as indicator_category, null as indicator_data_type, null as indicator_unit
+    	, true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
+    , null::uuid as id_indicatorresult, null as gender, null as value
+from {{ source('dwhpublic', 'syh_methods_campaign')}} c
+    join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
+    join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
+    join {{ source('dwhpublic', 'syh_organizations_organization')}} o on s.organization_id=o.id
+    join {{ source('dwhpublic', 'syh_users_user')}} u on s.user_id=u.id
+    join method_section_hieriarchy h on h.method_id=m.id
+    left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
+where 1=1
+       {% if is_incremental() %}
+
+      and year>=(date_part('year', current_date)-1)::varchar
+
+
+      {% endif %}
+
+
+union all
+select distinct c.id as id_campaign
+        , c.name as campaign_name
+        , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
+        , c.name_eu as campaign_name_eu, c.name_es as campaign_name_es, c.name_nl as campaign_name_nl
+        , c.year, c.previous_campaign_id
+    , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
+    , m.id as id_method, m.active
+        , m.name as method_name
+        , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
+        , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
+        , m.description as method_description
+        , m.description_en as method_description_en, m.description_ca as method_description_ca
+        , m.description_gl as method_description_gl, m.description_eu as method_description_eu
+        , m.description_es as method_description_es, m.description_nl as method_description_nl
+    , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
+    , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
+    , h.id as id_methods_section
+        , h.title as method_section_title
+        , h.title_en as method_section_title_en, h.title_ca as method_section_title_ca
+        , h.title_gl as method_section_title_gl, h.title_eu as method_section_title_eu
+        , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
+        , h.order as method_order, h.lvl as method_level, h.path_order
+    , si.sort_value
+    , null::uuid as id_indicator, null as indicator_code
+        , null as indicator_name
+        , null as indicator_name_en, null as indicator_name_ca, null as indicator_name_gl
+        , null as indicator_name_eu, null as indicator_name_es, null as indicator_name_nl
+        , null as indicator_description
+        , null as indicator_description_en, null as indicator_description_ca
+        , null as indicator_description_gl, null as indicator_description_eu
+        , null as indicator_description_es, null as indicator_description_nl
+    	, false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
     , null::uuid as id_indicatorresult, null as gender, null as value
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
