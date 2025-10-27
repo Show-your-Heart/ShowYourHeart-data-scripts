@@ -57,7 +57,7 @@ select id_campaign
 , max(indicator_description_eu) as indicator_description_eu
 , max(indicator_description_gl) as indicator_description_gl
 , max(indicator_description_nl) as indicator_description_nl
-, bool_or(is_direct_indicator) as is_direct_indicator, max(indicator_category) as indicator_category
+, is_direct_indicator as is_direct_indicator, max(indicator_category) as indicator_category
 , max(indicator_data_type) as indicator_data_type, max(indicator_unit) as indicator_unit
 , array_agg(
 	case gender when 0 then 'Home'
@@ -75,4 +75,4 @@ select id_campaign
 , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization
-, id_methods_section, id_indicator, indicator_code
+, id_methods_section, id_indicator, indicator_code, is_direct_indicator
