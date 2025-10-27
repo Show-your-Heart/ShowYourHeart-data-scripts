@@ -105,7 +105,7 @@ select distinct c.id as id_campaign
         , null as indicator_description_gl, null as indicator_description_eu
         , null as indicator_description_es, null as indicator_description_nl
     	, true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
-    , null::uuid as id_indicatorresult, null as gender, null as value
+    , null::uuid as id_indicatorresult, null::int as gender, null as value
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
@@ -155,7 +155,7 @@ select distinct c.id as id_campaign
         , null as indicator_description_gl, null as indicator_description_eu
         , null as indicator_description_es, null as indicator_description_nl
     	, false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
-    , null::uuid as id_indicatorresult, null as gender, null as value
+    , null::uuid as id_indicatorresult, null::int as gender, null as value
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
