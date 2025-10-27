@@ -96,16 +96,16 @@ select c.id as id_campaign
         , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
         , h.order as method_order, h.lvl as method_level, h.path_order
     , si.sort_value
-    , i.id as id_indicator, i.code as indicator_code
-        , i.name as indicator_name
-        , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
-        , i.name_eu as indicator_name_eu, i.name_es as indicator_name_es, i.name_nl as indicator_name_nl
-        , i.description as indicator_description
-        , i.description_en as indicator_description_en, i.description_ca as indicator_description_ca
-        , i.description_gl as indicator_description_gl, i.description_eu as indicator_description_eu
-        , i.description_es as indicator_description_es, i.description_nl as indicator_description_nl
-    	, i.is_direct_indicator, i.category as indicator_category, i.data_type as indicator_data_type, i.unit as indicator_unit
-    , ir.id as id_indicatorresult, ir.gender, ir.value
+    , null::uuid as id_indicator, null as indicator_code
+        , null as indicator_name
+        , null as indicator_name_en, null as indicator_name_ca, null as indicator_name_gl
+        , null as indicator_name_eu, null as indicator_name_es, null as indicator_name_nl
+        , null as indicator_description
+        , null as indicator_description_en, null as indicator_description_ca
+        , null as indicator_description_gl, null as indicator_description_eu
+        , null as indicator_description_es, null as indicator_description_nl
+    	, null::boolean, null as indicator_category, null as indicator_data_type, null as indicator_unit
+    , null::uuid as id_indicatorresult, null as gender, null as value
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
