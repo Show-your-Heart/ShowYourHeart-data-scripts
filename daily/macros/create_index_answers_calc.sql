@@ -36,7 +36,7 @@ update {{ this }}  set id_methods_section=h.id
 from method_section_hieriarchy h
 join syh_methods_section_indicators si on si.section_id=h.id
 where {{ this.table }}.id_indicator=si.indicator_id and {{ this.table }}.id_method=h.method_id
-    and id_methods_section is null
+    and id_methods_section is null;
 
 commit;
 
