@@ -8,7 +8,7 @@ create index cix_answers_calc on {{ this }} (id_campaign, id_survey, id_method, 
 
 CLUSTER {{ this }} USING cix_answers_calc;
 
-
+-- calculo la jerarquia de cada pregunta
 with recursive method_section_hieriarchy as (
 select distinct s.id
     , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
@@ -37,6 +37,8 @@ from method_section_hieriarchy h
 join syh_methods_section_indicators si on si.section_id=h.id
 where {{ this.table }}.id_indicator=si.indicator_id and {{ this.table }}.id_method=h.method_id
     and id_methods_section is null;
+
+-- TODO afegir les jerarquies sense pregunta (per cada campanya/mètode/organització
 
 commit;
 
