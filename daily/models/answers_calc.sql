@@ -35,12 +35,12 @@ select c.id as id_campaign
     , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
     , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
     , h.id as id_methods_section
-        , h.title as method_section_title
-        , h.title_en as method_section_title_en, h.title_ca as method_section_title_ca
-        , h.title_gl as method_section_title_gl, h.title_eu as method_section_title_eu
-        , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
-        , h.order as method_order, h.lvl as method_level, h.path_order
-    , si.sort_value
+        , coalesce(h.title, 'Indirect indicator') as method_section_title
+        , coalesce(h.title_en, 'Indirect indicator') as method_section_title_en, coalesce(h.title_ca, 'Indicator indirecte') as method_section_title_ca
+        , coalesce(h.title_gl, 'Indirect indicator') as method_section_title_gl, coalesce(h.title_eu, 'Indirect indicator') as method_section_title_eu
+        , coalesce(h.title_es, 'Indicador indirecto') as method_section_title_es, coalesce(h.title_nl, 'Indirect indicator') as method_section_title_nl
+        , coalesce(h.order, 999) as method_order, coalesce(h.lvl,1) as method_level, coalesce(h.path_order, '9999.01') as path_order
+    , coalesce(si.sort_value, 999) as sort_value
     , i.id as id_indicator, i.code as indicator_code
         , i.name as indicator_name
         , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
@@ -56,11 +56,12 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
     join {{ source('dwhpublic', 'syh_organizations_organization')}} o on s.organization_id=o.id
     join {{ source('dwhpublic', 'syh_users_user')}} u on s.user_id=u.id
+    left join {{ source('dwhpublic', 'syh_methods_indicatorresult')}} ir on ir.survey_id=s.id
+    left join {{ source('dwhpublic', 'syh_methods_indicator')}} i on ir.indicator_id=i.id
     join method_section_hieriarchy h on h.method_id=m.id
     left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
-    left join {{ source('dwhpublic', 'syh_methods_indicator')}} i on si.indicator_id=i.id
-    left join {{ source('dwhpublic', 'syh_methods_indicatorresult')}} ir on ir.indicator_id = i.id and ir.survey_id=s.id
- where 1=1
+        and si.indicator_id=i.id
+where 1=1
        {% if is_incremental() %}
 
       and year>=(date_part('year', current_date)-1)::varchar
