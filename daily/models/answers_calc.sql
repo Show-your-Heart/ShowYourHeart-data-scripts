@@ -5,19 +5,19 @@
 , post_hook=after_commit("{{ create_index_answers_calc() }}")
 ) }}
 
-with recursive method_section_hieriarchy as (
-select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
-    , s.order, s.method_id, s.parent_id, 1 as lvl, cast(s.order as text) as path_order
-from {{ source('dwhpublic', 'syh_methods_section')}} s
-where parent_id is null
-union all
-select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
-    , s.order, s.method_id, s.parent_id, ms.lvl+1 as lvl, ms.path_order || '.' || lpad(s.order::varchar,2,'0') AS path_order
-from {{ source('dwhpublic', 'syh_methods_section')}} s
-	join method_section_hieriarchy ms on ms.id=s.parent_id
-)
+--with recursive method_section_hieriarchy as (
+--select distinct s.id
+--    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
+--    , s.order, s.method_id, s.parent_id, 1 as lvl, cast(s.order as text) as path_order
+--from {{ source('dwhpublic', 'syh_methods_section')}} s
+--where parent_id is null
+--union all
+--select distinct s.id
+--    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
+--    , s.order, s.method_id, s.parent_id, ms.lvl+1 as lvl, ms.path_order || '.' || lpad(s.order::varchar,2,'0') AS path_order
+--from {{ source('dwhpublic', 'syh_methods_section')}} s
+--	join method_section_hieriarchy ms on ms.id=s.parent_id
+--)
 select c.id as id_campaign
         , c.name as campaign_name
         , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
@@ -34,13 +34,16 @@ select c.id as id_campaign
         , m.description_es as method_description_es, m.description_nl as method_description_nl
     , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
     , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
-    , h.id as id_methods_section
-        , coalesce(h.title, 'Indirect indicator') as method_section_title
-        , coalesce(h.title_en, 'Indirect indicator') as method_section_title_en, coalesce(h.title_ca, 'Indicator indirecte') as method_section_title_ca
-        , coalesce(h.title_gl, 'Indirect indicator') as method_section_title_gl, coalesce(h.title_eu, 'Indirect indicator') as method_section_title_eu
-        , coalesce(h.title_es, 'Indicador indirecto') as method_section_title_es, coalesce(h.title_nl, 'Indirect indicator') as method_section_title_nl
-        , coalesce(h.order, 999) as method_order, coalesce(h.lvl,1) as method_level, coalesce(h.path_order, '9999.01') as path_order
-    , coalesce(si.sort_value, 999) as sort_value
+    , null::uuid as id_methods_section
+        ,'Indirect indicator'::varchar(500) as method_section_title
+        ,'Indirect indicator'::varchar(500) as method_section_title_en
+        ,'Indicator indirecte'::varchar(500) as method_section_title_ca
+        ,'Indirect indicator'::varchar(500) as method_section_title_gl
+        ,'Indirect indicator'::varchar(500) as method_section_title_eu
+        ,'Indicador indirecto'::varchar(500) as method_section_title_es
+        , 'Indirect indicator'::varchar(500) as method_section_title_nl
+        , 999 as method_order,1 as method_level, '9999.01' as path_order
+        , 999 as sort_value
     , i.id as id_indicator, i.code as indicator_code
         , i.name as indicator_name
         , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
@@ -58,9 +61,9 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_users_user')}} u on s.user_id=u.id
     left join {{ source('dwhpublic', 'syh_methods_indicatorresult')}} ir on ir.survey_id=s.id
     left join {{ source('dwhpublic', 'syh_methods_indicator')}} i on ir.indicator_id=i.id
-    left join method_section_hieriarchy h on h.method_id=m.id
-    left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
-        and si.indicator_id=i.id
+    --left join method_section_hieriarchy h on h.method_id=m.id
+    --left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
+    --    and si.indicator_id=i.id
 where 1=1
        {% if is_incremental() %}
 
