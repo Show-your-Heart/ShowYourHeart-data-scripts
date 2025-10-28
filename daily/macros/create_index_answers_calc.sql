@@ -7,6 +7,8 @@ create index cix_answers_calc on {{ this }} (id_campaign, id_survey, id_method, 
 );
 
 CLUSTER {{ this }} USING cix_answers_calc;
+{% endif %}
+
 
 -- calculo la jerarquia de cada pregunta
 with recursive method_section_hieriarchy as (
@@ -42,7 +44,7 @@ where {{ this.table }}.id_indicator=si.indicator_id and {{ this.table }}.id_meth
 
 commit;
 
-{% endif %}
+
 
 
 {% endmacro %}
