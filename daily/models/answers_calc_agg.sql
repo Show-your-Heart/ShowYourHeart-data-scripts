@@ -73,6 +73,12 @@ select id_campaign
 		when 2 then '"N/B"'
 		end::varchar,',' order by gender)||']' end as str_gender
 , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_en
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_ca
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_es
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_eu
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_gl
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_nl
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization
 , id_methods_section, id_indicator, indicator_code, is_direct_indicator
