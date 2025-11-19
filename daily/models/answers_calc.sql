@@ -53,7 +53,8 @@ select c.id as id_campaign
         , i.description_gl as indicator_description_gl, i.description_eu as indicator_description_eu
         , i.description_es as indicator_description_es, i.description_nl as indicator_description_nl
     	, i.is_direct_indicator, i.category as indicator_category, i.data_type as indicator_data_type, i.unit as indicator_unit
-    , ir.id as id_indicatorresult, ir.gender, ir.value
+    , ir.id as id_indicatorresult, ir.gender
+        , case when replace(ir.value, ' ', '')=',' then null else regexp_replace(ir.value, ',\s*\]', ']', 'g') end as ir_value
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
