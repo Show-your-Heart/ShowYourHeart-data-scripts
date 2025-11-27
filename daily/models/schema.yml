@@ -40,6 +40,7 @@ sources:
       - name: syh_methods_topic
       - name: syh_organizations_organization
       - name: syh_organizations_organization_methods
+      - name: syh_organizations_project
       - name: syh_pg_stat_statements
       - name: syh_pg_stat_statements_info
       - name: syh_post_office_attachment
