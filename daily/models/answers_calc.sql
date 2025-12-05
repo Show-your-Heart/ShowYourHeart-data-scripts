@@ -25,7 +25,7 @@ select c.id as id_campaign
         , c.name_fr as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
-    , m.id as id_method, m.active
+    , m.id as id_method
         , m.name as method_name
         , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
         , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
@@ -92,7 +92,7 @@ select distinct c.id as id_campaign
         , c.name_fr as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
-    , m.id as id_method, m.active
+    , m.id as id_method
         , m.name as method_name
         , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
         , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
@@ -149,7 +149,7 @@ select distinct c.id as id_campaign
         , c.name_fr as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
-    , m.id as id_method, m.active
+    , m.id as id_method
         , m.name as method_name
         , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
         , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
