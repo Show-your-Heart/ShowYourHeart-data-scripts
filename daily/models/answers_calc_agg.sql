@@ -16,7 +16,7 @@ select id_campaign
     , max("year") as "year", max(previous_campaign_id::varchar)::uuid as previous_campaign_id
     , id_survey, max(survey_created_at) as survey_created_at, max(survey_updated_at) as survey_updated_at
     , max(status) as status
-    , id_method, bool_or(active) as active
+    , id_method
     , max(method_name) as method_name
     , max(method_name_en) as method_name_en
     , max(method_name_ca) as method_name_ca
