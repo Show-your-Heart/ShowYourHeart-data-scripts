@@ -3,7 +3,7 @@
 
 
 with vals as (
-	select unnest(string_to_array(trim(both '[]' from str_value),',')) as val_id,*
+	select unnest(string_to_array(trim(both '[]' from str_value),'|')) as val_id,*
 	from {{ this }}
 ),
 fin as (
