@@ -101,6 +101,7 @@ where 1=1
 
 
       {% endif %}
+      and (g1.title is not null or ir.value<>'')
 
 union all
 select distinct c.id as id_campaign
