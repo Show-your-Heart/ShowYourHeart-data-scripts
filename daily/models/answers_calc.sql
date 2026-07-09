@@ -65,6 +65,22 @@ select c.id as id_campaign
             else replace(regexp_replace(ir.value, ',\s*\]', ']', 'g'), '"', '')
           end as value
     , pr.id as id_project, pr.name as project_name
+    ,g1.title as g1_title
+    ,g1.title_en as g1_title_en
+    ,g1.title_ca as g1_title_ca
+    ,g1.title_gl as g1_title_gl
+    ,g1.title_eu as g1_title_eu
+    ,g1.title_es as g1_title_es
+    ,g1.title_nl as g1_title_nl
+    ,g1.title_fr as g1_title_fr
+    ,g2.title as g2_title
+    ,g2.title_en as g2_title_en
+    ,g2.title_ca as g2_title_ca
+    ,g2.title_gl as g2_title_gl
+    ,g2.title_eu as g2_title_eu
+    ,g2.title_es as g2_title_es
+    ,g2.title_nl as g2_title_nl
+    ,g2.title_fr as g2_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     left join {{ source('dwhpublic', 'syh_organizations_project')}} pr on s.project_id=pr.id
@@ -73,6 +89,8 @@ from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_users_user')}} u on s.user_id=u.id
     left join {{ source('dwhpublic', 'syh_methods_indicatorresult')}} ir on ir.survey_id=s.id
     left join {{ source('dwhpublic', 'syh_methods_indicator')}} i on ir.indicator_id=i.id
+    left join {{ source('dwhpublic', 'syh_methods_groupitem')}} g1 on ir.group_item_id = g1.id
+    left join {{ source('dwhpublic', 'syh_methods_groupitem')}} g2 on ir.group_2_item_id = g2.id
     --left join method_section_hieriarchy h on h.method_id=m.id
     --left join {{ source('dwhpublic', 'syh_methods_section_indicators')}} si on si.section_id=h.id
     --    and si.indicator_id=i.id
@@ -125,6 +143,23 @@ select distinct c.id as id_campaign
     	, true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
     , null::uuid as id_indicatorresult, null::int as gender, null as value
     , null::uuid as id_project, null as project_name
+    , null as g2_title
+    , null::varchar as g2_title
+    , null::varchar as g2_title_en
+    , null::varchar as g2_title_ca
+    , null::varchar as g2_title_gl
+    , null::varchar as g2_title_eu
+    , null::varchar as g2_title_es
+    , null::varchar as g2_title_nl
+    , null::varchar as g2_title_fr
+    , null::varchar as g1_title
+    , null::varchar as g1_title_en
+    , null::varchar as g1_title_ca
+    , null::varchar as g1_title_gl
+    , null::varchar as g1_title_eu
+    , null::varchar as g1_title_es
+    , null::varchar as g1_title_nl
+    , null::varchar as g1_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
@@ -182,6 +217,22 @@ select distinct c.id as id_campaign
     	, false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
     , null::uuid as id_indicatorresult, null::int as gender, null as value
     , null::uuid as id_project, null as project_name
+    , null::varchar as g2_title
+    , null::varchar as g2_title_en
+    , null::varchar as g2_title_ca
+    , null::varchar as g2_title_gl
+    , null::varchar as g2_title_eu
+    , null::varchar as g2_title_es
+    , null::varchar as g2_title_nl
+    , null::varchar as g2_title_fr
+    , null::varchar as g1_title
+    , null::varchar as g1_title_en
+    , null::varchar as g1_title_ca
+    , null::varchar as g1_title_gl
+    , null::varchar as g1_title_eu
+    , null::varchar as g1_title_es
+    , null::varchar as g1_title_nl
+    , null::varchar as g1_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id

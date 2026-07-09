@@ -79,13 +79,27 @@ select id_campaign
             when 1 then '"Dona"'
             when 2 then '"N/B"'
             end::varchar,',' order by gender)||']' end as str_gender
-    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_en
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_ca
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_es
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_eu
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_gl
-        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']' else string_agg(value,'') end as str_value_nl
+    , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title,' -- ', g1_title,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_en,' -- ', g1_title_en,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value_en
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_ca,' -- ', g1_title_ca,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value_ca
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_es,' -- ', g1_title_es,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+             else string_agg(value,'') end as str_value_es
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_eu,' -- ', g1_title_eu,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value_eu
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_gl,' -- ', g1_title_gl,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value_gl
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct group_2_item_id)>0 then '['||string_agg(concat(g2_title_nl,' -- ', g1_title_nl,' -- ',value),',' order by group_2_item_id, group_item_id)||']'
+            else string_agg(value,'') end as str_value_nl
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
     , id_methods_section, id_indicator, indicator_code, is_direct_indicator

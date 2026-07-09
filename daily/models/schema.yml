@@ -22,6 +22,7 @@ sources:
       - name: syh_methods_campaign
       - name: syh_methods_campaign_methods
       - name: syh_methods_externalsurveyinvitation
+      - name: syh_methods_groupitem
       - name: syh_methods_indicator
       - name: syh_methods_indicator_topics
       - name: syh_methods_indicatorresult
