@@ -80,25 +80,25 @@ select id_campaign
             when 2 then '"N/B"'
             end::varchar,',' order by gender)||']' end as str_gender
     , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title,' -- ', g1_title,' -- ',value),',' order by g2_title, g1_title)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title,' -- ', g1_title,' -- ',value),'","' order by g2_title, g1_title)||'"]'
             else string_agg(value,'') end as str_value
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_en,' -- ', g1_title_en,' -- ',value),',' order by g2_title_en, g1_title_en)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_en,' -- ', g1_title_en,' -- ',value),'","' order by g2_title_en, g1_title_en)||'"]'
             else string_agg(value,'') end as str_value_en
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_ca,' -- ', g1_title_ca,' -- ',value),',' order by g2_title_ca, g1_title_ca)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_ca,' -- ', g1_title_ca,' -- ',value),'","' order by g2_title_ca, g1_title_ca)||'"]'
             else string_agg(value,'') end as str_value_ca
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_es,' -- ', g1_title_es,' -- ',value),',' order by g2_title_es, g1_title_es)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_es,' -- ', g1_title_es,' -- ',value),'","' order by g2_title_es, g1_title_es)||'"]'
              else string_agg(value,'') end as str_value_es
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_eu,' -- ', g1_title_eu,' -- ',value),',' order by g2_title_eu, g1_title_eu)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_eu,' -- ', g1_title_eu,' -- ',value),'","' order by g2_title_eu, g1_title_eu)||'"]'
             else string_agg(value,'') end as str_value_eu
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_gl,' -- ', g1_title_gl,' -- ',value),',' order by g2_title_gl, g1_title_gl)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_gl,' -- ', g1_title_gl,' -- ',value),'","' order by g2_title_gl, g1_title_gl)||'"]'
             else string_agg(value,'') end as str_value_gl
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '['||string_agg(concat(g2_title_nl,' -- ', g1_title_nl,' -- ',value),',' order by g2_title_nl, g1_title_nl)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_nl,' -- ', g1_title_nl,' -- ',value),'","' order by g2_title_nl, g1_title_nl)||'"]'
             else string_agg(value,'') end as str_value_nl
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
