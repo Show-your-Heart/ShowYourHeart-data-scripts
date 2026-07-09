@@ -101,7 +101,7 @@ where 1=1
 
 
       {% endif %}
-      and ((g1.title is not null and g2.title is not null) or ir.value<>'')
+      and ((g1.title is not null and g2.title is not null) or coalesce(ir.value,'')<>'')
 
 union all
 select distinct c.id as id_campaign
