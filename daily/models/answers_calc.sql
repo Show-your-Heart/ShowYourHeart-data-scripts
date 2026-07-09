@@ -143,15 +143,6 @@ select distinct c.id as id_campaign
     	, true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
     , null::uuid as id_indicatorresult, null::int as gender, null as value
     , null::uuid as id_project, null as project_name
-    , null as g2_title
-    , null::varchar as g2_title
-    , null::varchar as g2_title_en
-    , null::varchar as g2_title_ca
-    , null::varchar as g2_title_gl
-    , null::varchar as g2_title_eu
-    , null::varchar as g2_title_es
-    , null::varchar as g2_title_nl
-    , null::varchar as g2_title_fr
     , null::varchar as g1_title
     , null::varchar as g1_title_en
     , null::varchar as g1_title_ca
@@ -160,6 +151,14 @@ select distinct c.id as id_campaign
     , null::varchar as g1_title_es
     , null::varchar as g1_title_nl
     , null::varchar as g1_title_fr
+    , null::varchar as g2_title
+    , null::varchar as g2_title_en
+    , null::varchar as g2_title_ca
+    , null::varchar as g2_title_gl
+    , null::varchar as g2_title_eu
+    , null::varchar as g2_title_es
+    , null::varchar as g2_title_nl
+    , null::varchar as g2_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
@@ -217,14 +216,6 @@ select distinct c.id as id_campaign
     	, false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
     , null::uuid as id_indicatorresult, null::int as gender, null as value
     , null::uuid as id_project, null as project_name
-    , null::varchar as g2_title
-    , null::varchar as g2_title_en
-    , null::varchar as g2_title_ca
-    , null::varchar as g2_title_gl
-    , null::varchar as g2_title_eu
-    , null::varchar as g2_title_es
-    , null::varchar as g2_title_nl
-    , null::varchar as g2_title_fr
     , null::varchar as g1_title
     , null::varchar as g1_title_en
     , null::varchar as g1_title_ca
@@ -233,6 +224,14 @@ select distinct c.id as id_campaign
     , null::varchar as g1_title_es
     , null::varchar as g1_title_nl
     , null::varchar as g1_title_fr
+    , null::varchar as g2_title
+    , null::varchar as g2_title_en
+    , null::varchar as g2_title_ca
+    , null::varchar as g2_title_gl
+    , null::varchar as g2_title_eu
+    , null::varchar as g2_title_es
+    , null::varchar as g2_title_nl
+    , null::varchar as g2_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     join {{ source('dwhpublic', 'syh_methods_method')}} m on s.method_id=m.id
