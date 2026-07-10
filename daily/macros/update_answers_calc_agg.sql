@@ -1,6 +1,10 @@
 
 {% macro update_answers_calc_agg() %}
 
+create index cix_answers_calc_agg on {{ this }} (id_campaign, id_organization, id_method, id_methods_section, id_indicator, id_survey);
+
+CLUSTER {{ this }} USING cix_answers_calc_agg;
+
 
 with vals as (
 	select unnest(string_to_array(trim(both '[]' from replace(str_value,'|',',')),',')) as val_id,*
@@ -33,9 +37,6 @@ where f.id_campaign={{ this.table }}.id_campaign
 	and f.id_methods_section={{ this.table }}.id_methods_section
 	and f.id_indicator={{ this.table }}.id_indicator;
 
-create index cix_answers_calc_agg on {{ this }} (id_campaign, id_organization);
-
-CLUSTER {{ this }} USING cix_answers_calc_agg;
 
 
 
