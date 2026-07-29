@@ -93,6 +93,8 @@ select id_campaign
          end as str_list_gl
     , case when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_nl,' ◻️ ', g1_title_nl),'","' order by g2_title_nl, g1_title_nl)||'"]'
          end as str_list_nl
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_fr,' ◻️ ', g1_title_fr),'","' order by g2_title_fr, g1_title_fr)||'"]'
+         end as str_list_fr
 
     , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
@@ -115,6 +117,9 @@ select id_campaign
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_nl, g1_title_nl)||'"]'
             else string_agg(value,'') end as str_value_nl
+        , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
+            else string_agg(value,'') end as str_value_fr
 from {{ref('answers_calc')}}
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
     , id_methods_section, id_indicator, indicator_code, is_direct_indicator
