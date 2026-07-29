@@ -7,34 +7,59 @@
 
 with recursive method_section_hieriarchy as (
 select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl, s.title_fr
+    , s.title
+    , coalesce(s.title_en, s.title) as title_en
+    , coalesce(s.title_ca, s.title) as title_ca
+    , coalesce(s.title_gl, s.title) as title_gl
+    , coalesce(s.title_eu, s.title) as title_eu
+    , coalesce(s.title_es, s.title) as title_es
+    , coalesce(s.title_nl, s.title) as title_nl
+    , coalesce(s.title_fr, s.title) as title_fr
     , s.order, s.method_id, s.parent_id, 1 as lvl, cast(s.order as text) as path_order
 from {{ source('dwhpublic', 'syh_methods_section')}} s
 where parent_id is null
 union all
 select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl, s.title_fr
+    , s.title
+    , coalesce(s.title_en, s.title) as title_en
+    , coalesce(s.title_ca, s.title) as title_ca
+    , coalesce(s.title_gl, s.title) as title_gl
+    , coalesce(s.title_eu, s.title) as title_eu
+    , coalesce(s.title_es, s.title) as title_es
+    , coalesce(s.title_nl, s.title) as title_nl
+    , coalesce(s.title_fr, s.title) as title_fr
     , s.order, s.method_id, s.parent_id, ms.lvl+1 as lvl, ms.path_order || '.' || lpad(s.order::varchar,2,'0') AS path_order
 from {{ source('dwhpublic', 'syh_methods_section')}} s
 	join method_section_hieriarchy ms on ms.id=s.parent_id
 )
 select c.id as id_campaign
-        , c.name as campaign_name
-        , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
-        , c.name_eu as campaign_name_eu, c.name_es as campaign_name_es, c.name_nl as campaign_name_nl
-        , c.name_fr as campaign_name_fr
+        ,  c.name as campaign_name
+        ,  coalesce(c.name_en, c.name) as campaign_name_en
+        ,  coalesce(c.name_ca, c.name) as campaign_name_ca
+        ,  coalesce(c.name_gl, c.name) as campaign_name_gl
+        ,  coalesce(c.name_eu, c.name) as campaign_name_eu
+        ,  coalesce(c.name_es, c.name) as campaign_name_es
+        ,  coalesce(c.name_nl, c.name) as campaign_name_nl
+        ,  coalesce(c.name_fr, c.name) as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
     , m.id as id_method
         , m.name as method_name
-        , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
-        , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
-        , m.name_fr as method_name_fr
+        ,  coalesce(m.name_en, m.name) as method_name_en
+        ,  coalesce(m.name_ca, m.name) as method_name_ca
+        ,  coalesce(m.name_gl, m.name) as method_name_gl
+        ,  coalesce(m.name_eu, m.name) as method_name_eu
+        ,  coalesce(m.name_es, m.name) as method_name_es
+        ,  coalesce(m.name_nl, m.name) as method_name_nl
+        ,  coalesce(m.name_fr, m.name) as method_name_fr
         , m.description as method_description
-        , m.description_en as method_description_en, m.description_ca as method_description_ca
-        , m.description_gl as method_description_gl, m.description_eu as method_description_eu
-        , m.description_es as method_description_es, m.description_nl as method_description_nl
-        , m.description_fr as method_description_fr
+        ,  coalesce(m.description_en, m.description) as method_description_en
+        ,  coalesce(m.description_ca, m.description) as method_description_ca
+        ,  coalesce(m.description_gl, m.description) as method_description_gl
+        ,  coalesce(m.description_eu, m.description) as method_description_eu
+        ,  coalesce(m.description_es, m.description) as method_description_es
+        ,  coalesce(m.description_nl, m.description) as method_description_nl
+        ,  coalesce(m.description_fr, m.description) as method_description_fr
     , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
     , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
     , null::uuid as id_methods_section
@@ -50,14 +75,21 @@ select c.id as id_campaign
         , 999 as sort_value
     , i.id as id_indicator, i.code as indicator_code
         , i.name as indicator_name
-        , i.name_en as indicator_name_en, i.name_ca as indicator_name_ca, i.name_gl as indicator_name_gl
-        , i.name_eu as indicator_name_eu, i.name_es as indicator_name_es, i.name_nl as indicator_name_nl
-        , i.name_fr as indicator_name_fr
+        ,  coalesce(i.name_en, i.name) as indicator_name_en
+        ,  coalesce(i.name_ca, i.name) as indicator_name_ca
+        ,  coalesce(i.name_gl, i.name) as indicator_name_gl
+        ,  coalesce(i.name_eu, i.name) as indicator_name_eu
+        ,  coalesce(i.name_es, i.name) as indicator_name_es
+        ,  coalesce(i.name_nl, i.name) as indicator_name_nl
+        ,  coalesce(i.name_fr, i.name) as indicator_name_fr
         , i.description as indicator_description
-        , i.description_en as indicator_description_en, i.description_ca as indicator_description_ca
-        , i.description_gl as indicator_description_gl, i.description_eu as indicator_description_eu
-        , i.description_es as indicator_description_es, i.description_nl as indicator_description_nl
-        , i.description_fr as indicator_description_fr
+        ,  coalesce(i.description_en, i.description) as indicator_description_en
+        ,  coalesce(i.description_ca, i.description) as indicator_description_ca
+        ,  coalesce(i.description_gl, i.description) as indicator_description_gl
+        ,  coalesce(i.description_eu, i.description) as indicator_description_eu
+        ,  coalesce(i.description_es, i.description) as indicator_description_es
+        ,  coalesce(i.description_nl, i.description) as indicator_description_nl
+        ,  coalesce(i.description_fr, i.description) as indicator_description_fr
     	, i.is_direct_indicator, i.category as indicator_category, i.data_type as indicator_data_type, i.unit as indicator_unit
     , ir.id as id_indicatorresult, ir.gender
         , case when replace(ir.value, ' ', '')=',' or  replace(ir.value, ' ', '')='' then null
@@ -66,21 +98,21 @@ select c.id as id_campaign
           end as value
     , pr.id as id_project, pr.name as project_name
     ,g1.title as g1_title
-    ,g1.title_en as g1_title_en
-    ,g1.title_ca as g1_title_ca
-    ,g1.title_gl as g1_title_gl
-    ,g1.title_eu as g1_title_eu
-    ,g1.title_es as g1_title_es
-    ,g1.title_nl as g1_title_nl
-    ,g1.title_fr as g1_title_fr
+    , coalesce(g1.title_en, g1.title) as g1_title_en
+    , coalesce(g1.title_ca, g1.title) as g1_title_ca
+    , coalesce(g1.title_gl, g1.title) as g1_title_gl
+    , coalesce(g1.title_eu, g1.title) as g1_title_eu
+    , coalesce(g1.title_es, g1.title) as g1_title_es
+    , coalesce(g1.title_nl, g1.title) as g1_title_nl
+    , coalesce(g1.title_fr, g1.title) as g1_title_fr
     ,g2.title as g2_title
-    ,g2.title_en as g2_title_en
-    ,g2.title_ca as g2_title_ca
-    ,g2.title_gl as g2_title_gl
-    ,g2.title_eu as g2_title_eu
-    ,g2.title_es as g2_title_es
-    ,g2.title_nl as g2_title_nl
-    ,g2.title_fr as g2_title_fr
+    , coalesce(g2.title_en, g2.title) as g2_title_en
+    , coalesce(g2.title_ca, g2.title) as g2_title_ca
+    , coalesce(g2.title_gl, g2.title) as g2_title_gl
+    , coalesce(g2.title_eu, g2.title) as g2_title_eu
+    , coalesce(g2.title_es, g2.title) as g2_title_es
+    , coalesce(g2.title_nl, g2.title) as g2_title_nl
+    , coalesce(g2.title_fr, g2.title) as g2_title_fr
 from {{ source('dwhpublic', 'syh_methods_campaign')}} c
     join {{ source('dwhpublic', 'syh_methods_survey')}} s on s.campaign_id=c.id
     left join {{ source('dwhpublic', 'syh_organizations_project')}} pr on s.project_id=pr.id
@@ -106,29 +138,43 @@ where 1=1
 union all
 select distinct c.id as id_campaign
         , c.name as campaign_name
-        , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
-        , c.name_eu as campaign_name_eu, c.name_es as campaign_name_es, c.name_nl as campaign_name_nl
-        , c.name_fr as campaign_name_fr
+        ,  coalesce(c.name_en, c.name) as campaign_name_en
+        ,  coalesce(c.name_ca, c.name) as campaign_name_ca
+        ,  coalesce(c.name_gl, c.name) as campaign_name_gl
+        ,  coalesce(c.name_eu, c.name) as campaign_name_eu
+        ,  coalesce(c.name_es, c.name) as campaign_name_es
+        ,  coalesce(c.name_nl, c.name) as campaign_name_nl
+        ,  coalesce(c.name_fr, c.name) as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
     , m.id as id_method
         , m.name as method_name
-        , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
-        , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
-        , m.name_fr as method_name_fr
+        ,  coalesce(m.name_en, m.name) as method_name_en
+        ,  coalesce(m.name_ca, m.name) as method_name_ca
+        ,  coalesce(m.name_gl, m.name) as method_name_gl
+        ,  coalesce(m.name_eu, m.name) as method_name_eu
+        ,  coalesce(m.name_es, m.name) as method_name_es
+        ,  coalesce(m.name_nl, m.name) as method_name_nl
+        ,  coalesce(m.name_fr, m.name) as method_name_fr
         , m.description as method_description
-        , m.description_en as method_description_en, m.description_ca as method_description_ca
-        , m.description_gl as method_description_gl, m.description_eu as method_description_eu
-        , m.description_es as method_description_es, m.description_nl as method_description_nl
-        , m.description_fr as method_description_fr
+        ,  coalesce(m.description_en, m.description) as method_description_en
+        ,  coalesce(m.description_ca, m.description) as method_description_ca
+        ,  coalesce(m.description_gl, m.description) as method_description_gl
+        ,  coalesce(m.description_eu, m.description) as method_description_eu
+        ,  coalesce(m.description_es, m.description) as method_description_es
+        ,  coalesce(m.description_nl, m.description) as method_description_nl
+        ,  coalesce(m.description_fr, m.description) as method_description_fr
     , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
     , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
     , h.id as id_methods_section
         , h.title as method_section_title
-        , h.title_en as method_section_title_en, h.title_ca as method_section_title_ca
-        , h.title_gl as method_section_title_gl, h.title_eu as method_section_title_eu
-        , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
-        , h.title_fr as method_section_title_fr
+        , coalesce(h.title_en, h.title) as method_section_title_en
+        , coalesce(h.title_ca, h.title) as method_section_title_ca
+        , coalesce(h.title_gl, h.title) as method_section_title_gl
+        , coalesce(h.title_eu, h.title) as method_section_title_eu
+        , coalesce(h.title_es, h.title) as method_section_title_es
+        , coalesce(h.title_nl, h.title) as method_section_title_nl
+        , coalesce(h.title_fr, h.title) as method_section_title_fr
         , h.order as method_order, h.lvl as method_level, h.path_order
     , si.sort_value
     , null::uuid as id_indicator, null as indicator_code
@@ -179,29 +225,43 @@ where 1=1
 union all
 select distinct c.id as id_campaign
         , c.name as campaign_name
-        , c.name_en as campaign_name_en, c.name_ca as campaign_name_ca, c.name_gl as campaign_name_gl
-        , c.name_eu as campaign_name_eu, c.name_es as campaign_name_es, c.name_nl as campaign_name_nl
-        , c.name_fr as campaign_name_fr
+        ,  coalesce(c.name_en, c.name) as campaign_name_en
+        ,  coalesce(c.name_ca, c.name) as campaign_name_ca
+        ,  coalesce(c.name_gl, c.name) as campaign_name_gl
+        ,  coalesce(c.name_eu, c.name) as campaign_name_eu
+        ,  coalesce(c.name_es, c.name) as campaign_name_es
+        ,  coalesce(c.name_nl, c.name) as campaign_name_nl
+        ,  coalesce(c.name_fr, c.name) as campaign_name_fr
         , c.year, c.previous_campaign_id
     , s.id as id_survey, s.created_at as survey_created_at, s.updated_at as survey_updated_at, s.status
     , m.id as id_method
         , m.name as method_name
-        , m.name_en as method_name_en, m.name_ca as method_name_ca, m.name_gl as method_name_gl
-        , m.name_eu as method_name_eu, m.name_es as method_name_es, m.name_nl as method_name_nl
-        , m.name_nl as method_name_fr
+        ,  coalesce(m.name_en, m.name) as method_name_en
+        ,  coalesce(m.name_ca, m.name) as method_name_ca
+        ,  coalesce(m.name_gl, m.name) as method_name_gl
+        ,  coalesce(m.name_eu, m.name) as method_name_eu
+        ,  coalesce(m.name_es, m.name) as method_name_es
+        ,  coalesce(m.name_nl, m.name) as method_name_nl
+        ,  coalesce(m.name_fr, m.name) as method_name_fr
         , m.description as method_description
-        , m.description_en as method_description_en, m.description_ca as method_description_ca
-        , m.description_gl as method_description_gl, m.description_eu as method_description_eu
-        , m.description_es as method_description_es, m.description_nl as method_description_nl
-        , m.description_nl as method_description_fr
+        ,  coalesce(m.description_en, m.description) as method_description_en
+        ,  coalesce(m.description_ca, m.description) as method_description_ca
+        ,  coalesce(m.description_gl, m.description) as method_description_gl
+        ,  coalesce(m.description_eu, m.description) as method_description_eu
+        ,  coalesce(m.description_es, m.description) as method_description_es
+        ,  coalesce(m.description_nl, m.description) as method_description_nl
+        ,  coalesce(m.description_fr, m.description) as method_description_fr
     , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
     , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
     , h.id as id_methods_section
         , h.title as method_section_title
-        , h.title_en as method_section_title_en, h.title_ca as method_section_title_ca
-        , h.title_gl as method_section_title_gl, h.title_eu as method_section_title_eu
-        , h.title_es as method_section_title_es, h.title_nl as method_section_title_nl
-        , h.title_fr as method_section_title_fr
+        , coalesce(h.title_en, h.title) as method_section_title_en
+        , coalesce(h.title_ca, h.title) as method_section_title_ca
+        , coalesce(h.title_gl, h.title) as method_section_title_gl
+        , coalesce(h.title_eu, h.title) as method_section_title_eu
+        , coalesce(h.title_es, h.title) as method_section_title_es
+        , coalesce(h.title_nl, h.title) as method_section_title_nl
+        , coalesce(h.title_fr, h.title) as method_section_title_fr
         , h.order as method_order, h.lvl as method_level, h.path_order
     , si.sort_value
     , null::uuid as id_indicator, null as indicator_code
