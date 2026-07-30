@@ -67,12 +67,62 @@ select id_campaign
     , is_direct_indicator as is_direct_indicator, max(indicator_category) as indicator_category
     , max(indicator_data_type) as indicator_data_type, max(indicator_unit) as indicator_unit
     , array_agg(
-        case gender when 0 then 'Home'
-            when 1 then 'Dona'
-            when 2 then 'N/B'
+        case gender when 0 then 'Men'
+            when 1 then 'Women'
+            when 2 then 'Non binary'
             end
             ORDER BY gender
     ) as gender
+    , array_agg(
+        case gender when 0 then 'Men'
+            when 1 then 'Women'
+            when 2 then 'Non binary'
+            end
+            ORDER BY gender
+    ) as gender_en
+    , array_agg(
+        case gender when 0 then 'Homes'
+            when 1 then 'Dones'
+            when 2 then 'No binàries'
+            end
+            ORDER BY gender
+    ) as gender_ca
+    , array_agg(
+        case gender when 0 then 'Hombres'
+            when 1 then 'Mujeres'
+            when 2 then 'No binarias'
+            end
+            ORDER BY gender
+    ) as gender_es
+    , array_agg(
+        case gender when 0 then 'Gizonak'
+            when 1 then 'Emakumeak'
+            when 2 then 'Ez-binario'
+            end
+            ORDER BY gender
+    ) as gender_eu
+    , array_agg(
+        case gender when 0 then 'Homes'
+            when 1 then 'Mulleres'
+            when 2 then 'Non binarias'
+            end
+            ORDER BY gender
+    ) as gender_gl
+    , array_agg(
+        case gender when 0 then 'Hommes'
+            when 1 then 'Femmes'
+            when 2 then 'Non binaires'
+            end
+            ORDER BY gender
+    ) as gender_fr
+    , array_agg(
+        case gender when 0 then 'Men'
+            when 1 then 'Women'
+            when 2 then 'Non binary'
+            end
+            ORDER BY gender
+    ) as gender_nl
+
     , array_agg(value order by gender) as value
     , count(distinct gender) as num_gender
     , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Men"'
