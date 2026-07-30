@@ -25,11 +25,13 @@ from {{ source('dwhpublic', 'syh_methods_section')}} s
 )
 update {{ this }}  set id_methods_section=h.id
         , method_section_title=h.title
-        , method_section_title_en=h.title_en, method_section_title_ca=h.title_ca
-        , method_section_title_gl=h.title_gl
-        , method_section_title_eu=h.title_eu
-        , method_section_title_es=h.title_es
-        , method_section_title_nl=h.title_nl
+        , method_section_title_en=coalesce(h.title_en,h.title)
+        , method_section_title_ca=coalesce(h.title_ca,h.title)
+        , method_section_title_gl=coalesce(h.title_gl,h.title)
+        , method_section_title_eu=coalesce(h.title_eu,h.title)
+        , method_section_title_es=coalesce(h.title_es,h.title)
+        , method_section_title_nl=coalesce(h.title_nl,h.title)
+        , method_section_title_fr=coalesce(h.title_fr,h.title)
         , method_order=h."order"
         , method_level=h.lvl
         , path_order=h.path_order
