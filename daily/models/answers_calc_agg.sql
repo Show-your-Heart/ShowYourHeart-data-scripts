@@ -75,11 +75,38 @@ select id_campaign
     ) as gender
     , array_agg(value order by gender) as value
     , count(distinct gender) as num_gender
-    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Home"'
-            when 1 then '"Dona"'
-            when 2 then '"N/B"'
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Men"'
+            when 1 then '"Women"'
+            when 2 then '"Non binary"'
             end::varchar,',' order by gender)||']' end as str_gender
-
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Men"'
+            when 1 then '"Women"'
+            when 2 then '"Non binary"'
+            end::varchar,',' order by gender)||']' end as str_gender_en
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Homes"'
+            when 1 then '"Dones"'
+            when 2 then '"No binàries"'
+            end::varchar,',' order by gender)||']' end as str_gender_ca
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Homes"'
+            when 1 then '"Mujeres"'
+            when 2 then '"No binarias"'
+            end::varchar,',' order by gender)||']' end as str_gender_es
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Gizonak"'
+            when 1 then '"Emakumeak"'
+            when 2 then '"Ez-binario"'
+            end::varchar,',' order by gender)||']' end as str_gender_eu
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Homes"'
+            when 1 then '"Mulleres"'
+            when 2 then '"Non binarias"'
+            end::varchar,',' order by gender)||']' end as str_gender_gl
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Men"'
+            when 1 then '"Women"'
+            when 2 then '"Non binary"'
+            end::varchar,',' order by gender)||']' end as str_gender_nl
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Hommes"'
+            when 1 then '"Femmes"'
+            when 2 then '"Non binaires"'
+            end::varchar,',' order by gender)||']' end as str_gender_fr
     , case when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title,' ◻️ ', g1_title),'","' order by g2_title, g1_title)||'"]' end as str_list
     , case when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_title_en,' ◻️ ', g1_title_en),'","' order by g2_title_en, g1_title_en)||'"]'
          end as str_list_en
