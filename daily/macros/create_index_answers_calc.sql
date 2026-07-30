@@ -12,13 +12,13 @@ CLUSTER {{ this }} USING cix_answers_calc;
 -- calculo la jerarquia de cada pregunta
 with recursive method_section_hieriarchy as (
 select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
+    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl, s.title_fr
     , s.order, s.method_id, s.parent_id, 1 as lvl, cast(s.order as text) as path_order
 from {{ source('dwhpublic', 'syh_methods_section')}} s
 where parent_id is null
 union all
 select distinct s.id
-    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl
+    , s.title, s.title_en, s.title_ca, s.title_gl, s.title_eu, s.title_es, s.title_nl, s.title_fr
     , s.order, s.method_id, s.parent_id, ms.lvl+1 as lvl, ms.path_order || '.' || lpad(s.order::varchar,2,'0') AS path_order
 from {{ source('dwhpublic', 'syh_methods_section')}} s
 	join method_section_hieriarchy ms on ms.id=s.parent_id
