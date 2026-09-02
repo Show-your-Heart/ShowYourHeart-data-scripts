@@ -34,7 +34,7 @@ select id_campaign
     , max(method_description_nl) as method_description_nl
     , max(method_description_fr) as method_description_fr
     , id_user, max(user_name) as user_name, max(user_surname) as user_surname, max(user_email) as user_email
-    , id_organization, max(organization_name) as organization_name, max(vat_number) as vat_number
+    , id_organization, max(organization_name) as organization_name, max(vat_number) as vat_number, max(organization_logo) as organization_logo
     , id_project, max(project_name) as project_name
     , id_methods_section
     , max(method_section_title) as method_section_title
