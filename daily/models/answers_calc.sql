@@ -165,7 +165,7 @@
             ,  coalesce(m.description_nl, m.description) as method_description_nl
             ,  coalesce(m.description_fr, m.description) as method_description_fr
         , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
-        , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
+        , o.id as id_organization, o.name as organization_name, o.vat_number, o.logo as organization_logo --TODO afegir més camps
         , h.id as id_methods_section
             , h.title as method_section_title
             , coalesce(h.title_en, h.title) as method_section_title_en
@@ -252,7 +252,7 @@
             ,  coalesce(m.description_nl, m.description) as method_description_nl
             ,  coalesce(m.description_fr, m.description) as method_description_fr
         , u.id as id_user, u.name as user_name, u.surnames as user_surname, u.email as user_email
-        , o.id as id_organization, o.name as organization_name, o.vat_number --TODO afegir més camps
+        , o.id as id_organization, o.name as organization_name, o.vat_number, o.logo as organization_logo --TODO afegir més camps
         , h.id as id_methods_section
             , h.title as method_section_title
             , coalesce(h.title_en, h.title) as method_section_title_en
