@@ -205,7 +205,7 @@ select id_campaign
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
             --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_fr
-        , coalesce(smi.code, '') as set_code
+        , coalesce(i.code, '') as set_code
 from {{ref('answers_calc')}} ac
     left join (
         select distinct i.indicator_id, smi.code
