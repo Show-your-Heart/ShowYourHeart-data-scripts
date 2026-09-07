@@ -190,7 +190,7 @@
             , null as indicator_description_fr
             , true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
         , null::uuid as id_indicatorresult, null::int as gender, null as value
-        , null as instance_number
+        , null::smallint as instance_number
         , null::uuid as id_project, null as project_name
         , null::varchar as g1_title
         , null::varchar as g1_title_en
@@ -278,7 +278,7 @@
             , null as indicator_description_fr
             , false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
         , null::uuid as id_indicatorresult, null::int as gender, null as value
-        , null as instance_number
+        , null::smallint as instance_number
         , null::uuid as id_project, null as project_name
         , null::varchar as g1_title
         , null::varchar as g1_title_en
