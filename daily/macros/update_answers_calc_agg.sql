@@ -36,7 +36,7 @@ where f.id_campaign={{ this.table }}.id_campaign
 	and f.id_survey={{ this.table }}.id_survey
 	and f.id_method={{ this.table }}.id_method
 	and f.id_organization={{ this.table }}.id_organization
-	and coalesce(f.id_methods_section,'NO SECTION')=coalesce({{ this.table }}.id_methods_section, 'NO SECTION')
+	and coalesce(f.id_methods_section,null::uuid)=coalesce({{ this.table }}.id_methods_section, null,null::uuid)
 	and f.id_indicator={{ this.table }}.id_indicator;
 
 
