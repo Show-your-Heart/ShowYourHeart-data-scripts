@@ -24,6 +24,8 @@ sources:
       - name: syh_methods_externalsurveyinvitation
       - name: syh_methods_groupitem
       - name: syh_methods_indicator
+      - name: syh_methods_indicatorsset
+      - name: syh_methods_indicatorsset_indicators
       - name: syh_methods_indicator_topics
       - name: syh_methods_indicatorresult
       - name: syh_methods_invitation
