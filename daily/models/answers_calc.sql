@@ -96,6 +96,7 @@
                 when ir.value like '[%' and ir.value not like '%]' then null
                 else replace(regexp_replace(ir.value, ',\s*\]', ']', 'g'), '"', '')
               end as value
+        , ir.instance_number
         , pr.id as id_project, pr.name as project_name
         ,g1.title as g1_title
         , coalesce(g1.title_en, g1.title) as g1_title_en
@@ -189,6 +190,7 @@
             , null as indicator_description_fr
             , true as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
         , null::uuid as id_indicatorresult, null::int as gender, null as value
+        , null as instance_number
         , null::uuid as id_project, null as project_name
         , null::varchar as g1_title
         , null::varchar as g1_title_en
@@ -276,6 +278,7 @@
             , null as indicator_description_fr
             , false as is_direct_indicator, null as indicator_category, null as indicator_data_type, null as indicator_unit
         , null::uuid as id_indicatorresult, null::int as gender, null as value
+        , null as instance_number
         , null::uuid as id_project, null as project_name
         , null::varchar as g1_title
         , null::varchar as g1_title_en

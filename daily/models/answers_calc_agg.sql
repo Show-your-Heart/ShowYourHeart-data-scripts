@@ -205,7 +205,7 @@ select id_campaign
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
             --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_fr
-        , coalesce(i.code, '') as set_code
+        , coalesce(i.code, '') as set_code, ac.instance_number
 from {{ref('answers_calc')}} ac
     left join (
         select distinct i.indicator_id, smi.code
@@ -213,4 +213,4 @@ from {{ref('answers_calc')}} ac
         join {{ source('dwhpublic', 'syh_methods_indicatorsset')}} smi on i.indicatorsset_id=smi.id
     ) i on ac.id_indicator=i.indicator_id
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
-    , id_methods_section, id_indicator, indicator_code, is_direct_indicator, coalesce(i.code, '')
+    , id_methods_section, id_indicator, indicator_code, is_direct_indicator, coalesce(i.code, ''), ac.instance_number
