@@ -175,28 +175,40 @@ select id_campaign
 
     , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_en, g1_title_en)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_en
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_ca, g1_title_ca)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_ca
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_es, g1_title_es)||'"]'
-             else string_agg(value,'') end as str_value_es
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
+            else string_agg(value,'') end as str_value_es
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_eu, g1_title_eu)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_eu
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_gl, g1_title_gl)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_gl
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_nl, g1_title_nl)||'"]'
+           when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_nl
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
+            when count(distinct i.indicator_id)>0 then  '['||string_agg(value,',' order by value)||']'
             else string_agg(value,'') end as str_value_fr
-from {{ref('answers_calc')}}
+from {{ref('answers_calc')}} ac
+    left join (
+        select distinct i.indicator_id
+        from syh_methods_indicatorsset_indicators i
+    ) i on ac.id_indicator=i.indicator_id
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
     , id_methods_section, id_indicator, indicator_code, is_direct_indicator
