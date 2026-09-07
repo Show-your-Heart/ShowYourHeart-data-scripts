@@ -213,4 +213,4 @@ from {{ref('answers_calc')}} ac
         join {{ source('dwhpublic', 'syh_methods_indicatorsset')}} smi on i.indicatorsset_id=smi.id
     ) i on ac.id_indicator=i.indicator_id
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
-    , id_methods_section, id_indicator, indicator_code, is_direct_indicator, coalesce(smi.code, '')
+    , id_methods_section, id_indicator, indicator_code, is_direct_indicator, coalesce(i.code, '')
