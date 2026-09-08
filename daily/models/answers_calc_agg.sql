@@ -46,7 +46,7 @@ select id_campaign
     , max(method_section_title_nl) as method_section_title_nl
     , max(method_section_title_fr) as method_section_title_fr
     , max(method_order) as method_order, max(method_level) as method_level, max(path_order) as path_order
-    , max(sort_value) as sort_value
+    , max(ac.sort_value) as sort_value
     , id_indicator, indicator_code
     , max(indicator_name) as indicator_name
     , max(indicator_name_en) as indicator_name_en
