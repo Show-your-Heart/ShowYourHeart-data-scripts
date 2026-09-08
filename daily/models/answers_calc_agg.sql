@@ -205,12 +205,66 @@ select id_campaign
             when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
             --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_fr
-        , coalesce(i.code, '') as set_code, ac.instance_number
+        , coalesce(i.code, '') as set_code
+        , max(i.sort_value) as set_sort_value
+        , max(i.set_name) as set_name
+        , max(i.set_name_en) as set_name_en
+        , max(i.set_name_ca) as set_name_ca
+        , max(i.set_name_gl) as set_name_gl
+        , max(i.set_name_eu) as set_name_eu
+        , max(i.set_name_es) as set_name_es
+        , max(i.set_name_nl) as set_name_nl
+        , max(i.set_name_fr) as set_name_fr
+        , max(i.set_description) as set_description
+        , max(i.set_description_en) as set_description_en
+        , max(i.set_description_ca) as set_description_ca
+        , max(i.set_description_gl) as set_description_gl
+        , max(i.set_description_eu) as set_description_eu
+        , max(i.set_description_es) as set_description_es
+        , max(i.set_description_nl) as set_description_nl
+        , max(i.set_description_fr) as set_description_fr
+        , max(i.set_instance_name) as set_instance_name
+        , max(i.set_instance_name_en) as set_instance_name_en
+        , max(i.set_instance_name_ca) as set_instance_name_ca
+        , max(i.set_instance_name_gl) as set_instance_name_gl
+        , max(i.set_instance_name_eu) as set_instance_name_eu
+        , max(i.set_instance_name_es) as set_instance_name_es
+        , max(i.set_instance_name_nl) as set_instance_name_nl
+        , max(i.set_instance_name_fr) as set_instance_name_fr
+        , ac.instance_number
 from {{ref('answers_calc')}} ac
     left join (
-        select distinct i.indicator_id, smi.code
+        select distinct
+            i.indicator_id
+            , i.sort_value
+            , smi.code
+            , smi.name as set_name
+            , smi.name_en as set_name_en
+            , smi.name_ca as set_name_ca
+            , smi.name_gl as set_name_gl
+            , smi.name_eu as set_name_eu
+            , smi.name_es as set_name_es
+            , smi.name_nl as set_name_nl
+            , smi.name_fr as set_name_fr
+            , smi.description as set_description
+            , smi.description_en as set_description_en
+            , smi.description_ca as set_description_ca
+            , smi.description_gl as set_description_gl
+            , smi.description_eu as set_description_eu
+            , smi.description_es as set_description_es
+            , smi.description_nl as set_description_nl
+            , smi.description_fr as set_description_fr
+            , smi.instance_name as set_instance_name
+            , smi.instance_name_en as set_instance_name_en
+            , smi.instance_name_ca as set_instance_name_ca
+            , smi.instance_name_gl as set_instance_name_gl
+            , smi.instance_name_eu as set_instance_name_eu
+            , smi.instance_name_es as set_instance_name_es
+            , smi.instance_name_nl as set_instance_name_nl
+            , smi.instance_name_fr as set_instance_name_fr
         from {{ source('dwhpublic', 'syh_methods_indicatorsset_indicators')}} i
         join {{ source('dwhpublic', 'syh_methods_indicatorsset')}} smi on i.indicatorsset_id=smi.id
     ) i on ac.id_indicator=i.indicator_id
 group by id_campaign,  id_survey, id_method, id_user, id_organization, id_project
-    , id_methods_section, id_indicator, indicator_code, is_direct_indicator, coalesce(i.code, ''), ac.instance_number
+    , id_methods_section, id_indicator, indicator_code, is_direct_indicator
+    , coalesce(i.code, ''), ac.instance_number
