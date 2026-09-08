@@ -12,6 +12,7 @@ with vals as (
 ),
 fin as (
 select v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_survey, v.survey_created_at, v.survey_updated_at, v.status, v.id_method, v.method_name, v.method_description, v.id_user, v.user_name, v.user_surname, v.user_email, v.id_organization, v.organization_name, v.vat_number, v.id_methods_section, v.method_section_title, v.method_order, v.method_level, v.path_order, v.sort_value, v.id_indicator, v.indicator_code, v.indicator_name, v.indicator_description, v.is_direct_indicator, v.indicator_category, v.indicator_data_type, v.indicator_unit, v.gender, v.value, v.num_gender, v.str_gender
+    , v.set_code, v.instance_number
 , '['||string_Agg('"'||replace(l.title, '"', '')||'"',',')||']' as str_value
     , '['||string_Agg('"'||replace(l.title_en, '"', '')||'"',',')||']' as str_value_en
     , '['||string_Agg('"'||replace(l.title_ca, '"', '')||'"',',')||']' as str_value_ca
@@ -22,6 +23,7 @@ select v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_su
     , '['||string_Agg('"'||replace(l.title_fr, '"', '')||'"',',')||']' as str_value_fr
 from vals v join {{ source('dwhpublic', 'syh_methods_listitem')}} l on v.val_id=l.id::text
 group by v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_survey, v.survey_created_at, v.survey_updated_at, v.status, v.id_method, v.method_name, v.method_description, v.id_user, v.user_name, v.user_surname, v.user_email, v.id_organization, v.organization_name, v.vat_number, v.id_methods_section, v.method_section_title, v.method_order, v.method_level, v.path_order, v.sort_value, v.id_indicator, v.indicator_code, v.indicator_name, v.indicator_description, v.is_direct_indicator, v.indicator_category, v.indicator_data_type, v.indicator_unit, v.gender, v.value, v.num_gender, v.str_gender
+    , v.set_code, v.instance_number
 )
 update {{ this }} set str_value=f.str_value
     , str_value_en=f.str_value_en
@@ -36,6 +38,8 @@ where f.id_campaign={{ this.table }}.id_campaign
 	and f.id_survey={{ this.table }}.id_survey
 	and f.id_method={{ this.table }}.id_method
 	and f.id_organization={{ this.table }}.id_organization
+	and f.set_code={{ this.table }}.set_code
+	and coalesce(f.instance_number,-1)=coalesce({{ this.table }}.instance_number, -1)
 	-- uuid random per als que no tenen section
 	and coalesce(f.id_methods_section,'2aa162df-864d-4d58-8924-2d6fab577017'::uuid)=coalesce({{ this.table }}.id_methods_section, null,'2aa162df-864d-4d58-8924-2d6fab577017'::uuid)
 	and f.id_indicator={{ this.table }}.id_indicator;
