@@ -11,6 +11,7 @@
 	, smi.email as invitation_user_email
 	, smi.send_date as  invitation_send_date
 	, smi.gender as invitation_user_gender
+	, smi.token as invitation_user_token
 	, c.id as id_campaign
 	, c.name as campaign_name
 	, coalesce(c.name_en, c.name) as campaign_name_en

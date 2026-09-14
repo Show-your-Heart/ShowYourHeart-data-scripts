@@ -34,6 +34,7 @@ select id_campaign
     , max(method_description_nl) as method_description_nl
     , max(method_description_fr) as method_description_fr
     , id_external_survey, max(external_survey_name) as external_survey_name
+    , invitation_user_token
     , max(invitation_user_email) as invitation_user_email, max(invitation_send_date) as invitation_send_date
     , max(invitation_user_gender) as invitation_user_gender
     , id_organization, max(organization_name) as organization_name, max(vat_number) as vat_number, max(organization_logo) as organization_logo
@@ -267,6 +268,6 @@ from {{ref('external_answers_calc')}} ac
         from {{ source('dwhpublic', 'syh_methods_indicatorsset_indicators')}} i
         join {{ source('dwhpublic', 'syh_methods_indicatorsset')}} smi on i.indicatorsset_id=smi.id
     ) i on ac.id_indicator=i.indicator_id
-group by id_external_survey, id_campaign,  id_survey, id_method, id_organization, id_project
+group by id_external_survey, invitation_user_token, id_campaign,  id_survey, id_method, id_organization, id_project
     , id_methods_section, id_indicator, indicator_code, is_direct_indicator
     , coalesce(i.code, ''), ac.instance_number
