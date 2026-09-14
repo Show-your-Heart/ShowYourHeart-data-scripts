@@ -234,7 +234,7 @@ select id_campaign
         , max(i.set_instance_name_nl) as set_instance_name_nl
         , max(i.set_instance_name_fr) as set_instance_name_fr
         , ac.instance_number
-from {{ref('answers_calc')}} ac
+from {{ref('external_answers_calc')}} ac
     left join (
         select distinct
             i.indicator_id
