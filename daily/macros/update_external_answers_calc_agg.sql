@@ -67,13 +67,11 @@ select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indic
 , '['||string_Agg('"'||replace(val.title_nl, '"', '')||'"',',')||']'  as list_string_nl
 , '['||string_Agg('"'||replace(val.title_fr, '"', '')||'"',',')||']'  as list_string_fr
 ,'['||string_Agg('"'||case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then '✅' else '❌' end||'"',',')||']'  as list_value
---,array_agg(case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then 1 else 0 end) as list_value
---,  a.*
-from {this} a
+from {{ this }} a
 join val on a.indicator_code = val.code
 group by id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
 )
-update {this} set
+update {{ this }} set
 	str_list = list_string
 	, str_list_ca = list_string_ca
 	, str_list_es = list_string_es
@@ -91,12 +89,12 @@ update {this} set
 	, str_value_fr=list_value
 	, str_value_nl=list_value
 from new_list_val n
-where n.id_organization= {this.table}.id_organization
-and n.id_campaign= {this.table}.id_campaign
-and n.id_method= {this.table}.id_method
-and n.id_project= {this.table}.id_project
-and n.id_survey= {this.table}.id_survey
-and n.indicator_code={this.table}.indicator_code
+where n.id_organization = {{this.table}}.id_organization
+and n.id_campaign = {{this.table}}.id_campaign
+and n.id_method = {{this.table}}.id_method
+and n.id_project = {{this.table}}.id_project
+and n.id_survey = {{this.table}}.id_survey
+and n.indicator_code = {{this.table}}.indicator_code;
 
 
 
