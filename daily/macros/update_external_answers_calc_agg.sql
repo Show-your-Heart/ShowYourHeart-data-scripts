@@ -49,54 +49,6 @@ where f.id_campaign={{ this.table }}.id_campaign
 	and f.id_indicator={{ this.table }}.id_indicator;
 
 
-with val as (
-select  i.code, sml.title, sml.title_ca , sml.title_es , sml.title_gl , sml.title_eu , sml.title_en , sml.title_fr, sml.title_nl
-from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
-	join {{ source('dwhpublic', 'syh_methods_list')}} l on i.list_options_id = l.id and i.data_type in ('CH', 'R', 'DR')
-	join {{ source('dwhpublic', 'syh_methods_list_items')}} li on l.id = li.list_id
-	join {{ source('dwhpublic', 'syh_methods_listitem')}} sml on li.listitem_id = sml.id
-)
-, new_list_val as (
-select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
-, '['||string_Agg('"'||replace(val.title, '"', '')||'"',',')||']'  as list_string
-, '['||string_Agg('"'||replace(val.title_ca, '"', '')||'"',',')||']'  as list_string_ca
-, '['||string_Agg('"'||replace(val.title_es, '"', '')||'"',',')||']'  as list_string_es
-, '['||string_Agg('"'||replace(val.title_en, '"', '')||'"',',')||']'  as list_string_en
-, '['||string_Agg('"'||replace(val.title_gl, '"', '')||'"',',')||']'  as list_string_gl
-, '['||string_Agg('"'||replace(val.title_eu, '"', '')||'"',',')||']'  as list_string_eu
-, '['||string_Agg('"'||replace(val.title_nl, '"', '')||'"',',')||']'  as list_string_nl
-, '['||string_Agg('"'||replace(val.title_fr, '"', '')||'"',',')||']'  as list_string_fr
-,'['||string_Agg('"'||case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then '✅' else '❌' end||'"',',')||']'  as list_value
-from {{ this }} a
-join val on a.indicator_code = val.code
-group by id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
-)
-update {{ this }} set
-	str_list = list_string
-	, str_list_ca = list_string_ca
-	, str_list_es = list_string_es
-	, str_list_gl = list_string_gl
-	, str_list_eu = list_string_eu
-	, str_list_en = list_string_en
-	, str_list_fr = list_string_fr
-	, str_list_nl = list_string_nl
-	, str_value=list_value
-	, str_value_ca=list_value
-	, str_value_es=list_value
-	, str_value_gl=list_value
-	, str_value_eu=list_value
-	, str_value_en=list_value
-	, str_value_fr=list_value
-	, str_value_nl=list_value
-from new_list_val n
-where n.id_organization = {{this.table}}.id_organization
-and n.id_campaign = {{this.table}}.id_campaign
-and n.id_method = {{this.table}}.id_method
-and n.id_project = {{this.table}}.id_project
-and n.id_survey = {{this.table}}.id_survey
-and n.indicator_code = {{this.table}}.indicator_code;
-
-
 
 commit;
 
