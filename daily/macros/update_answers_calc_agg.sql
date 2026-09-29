@@ -89,7 +89,7 @@ from new_list_val n
 where n.id_organization = {{this.table}}.id_organization
 and n.id_campaign = {{this.table}}.id_campaign
 and n.id_method = {{this.table}}.id_method
-and n.id_project = {{this.table}}.id_project
+and (n.id_project = {{this.table}}.id_project or (n.id_project is null and {{this.table}}.id_project is null))
 and n.id_survey = {{this.table}}.id_survey
 and n.indicator_code = {{this.table}}.indicator_code;
 
