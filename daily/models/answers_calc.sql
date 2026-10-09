@@ -194,6 +194,7 @@
         , null::uuid as id_indicatorresult, null::int as gender, null as value
         , null::smallint as instance_number
         , null::uuid as id_project, null as project_name
+        , null::varchar as g1_suffix
         , null::varchar as g1_title
         , null::varchar as g1_title_en
         , null::varchar as g1_title_ca
@@ -202,6 +203,7 @@
         , null::varchar as g1_title_es
         , null::varchar as g1_title_nl
         , null::varchar as g1_title_fr
+        , null::varchar as g2_suffix
         , null::varchar as g2_title
         , null::varchar as g2_title_en
         , null::varchar as g2_title_ca
@@ -282,6 +284,7 @@
         , null::uuid as id_indicatorresult, null::int as gender, null as value
         , null::smallint as instance_number
         , null::uuid as id_project, null as project_name
+        , null::varchar as g1_suffix
         , null::varchar as g1_title
         , null::varchar as g1_title_en
         , null::varchar as g1_title_ca
@@ -290,6 +293,7 @@
         , null::varchar as g1_title_es
         , null::varchar as g1_title_nl
         , null::varchar as g1_title_fr
+        , null::varchar as g2_suffix
         , null::varchar as g2_title
         , null::varchar as g2_title_en
         , null::varchar as g2_title_ca
