@@ -232,6 +232,8 @@ select id_campaign
         , max(i.set_instance_name_nl) as set_instance_name_nl
         , max(i.set_instance_name_fr) as set_instance_name_fr
         , ac.instance_number
+        , max(g1_suffix) as g1_suffix
+        , max(g2_suffix) as g2_suffix
 from {{ref('answers_calc')}} ac
     left join (
         select distinct

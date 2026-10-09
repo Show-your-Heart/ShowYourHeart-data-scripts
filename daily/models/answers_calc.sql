@@ -98,7 +98,8 @@
               end as value
         , ir.instance_number
         , pr.id as id_project, pr.name as project_name
-        ,g1.title as g1_title
+        , g1.suffix as g1_suffix
+        , g1.title as g1_title
         , coalesce(g1.title_en, g1.title) as g1_title_en
         , coalesce(g1.title_ca, g1.title) as g1_title_ca
         , coalesce(g1.title_gl, g1.title) as g1_title_gl
@@ -106,7 +107,8 @@
         , coalesce(g1.title_es, g1.title) as g1_title_es
         , coalesce(g1.title_nl, g1.title) as g1_title_nl
         , coalesce(g1.title_fr, g1.title) as g1_title_fr
-        ,g2.title as g2_title
+        , g2.suffix as g2_suffix
+        , g2.title as g2_title
         , coalesce(g2.title_en, g2.title) as g2_title_en
         , coalesce(g2.title_ca, g2.title) as g2_title_ca
         , coalesce(g2.title_gl, g2.title) as g2_title_gl
