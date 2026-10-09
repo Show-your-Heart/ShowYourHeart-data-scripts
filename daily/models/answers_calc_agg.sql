@@ -158,19 +158,19 @@ select id_campaign
             when 2 then '"Non binaires"'
             end::varchar,',' order by gender)||']' end as str_gender_fr
     , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title,'TOTAL'),' ◻️ ', coalesce(g1_title,'TOTAL')),'","' order by g2_title, g1_title)||'"]' end as str_list
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_en,'TOTAL'),' ◻️ ', coalesce(g1_title_en,'TOTAL')),'","' order by g2_title_en, g1_title_en)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_en,'TOTAL'),' ◻️ ', coalesce(g1_title_en,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_en
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_ca,'TOTAL'),' ◻️ ', coalesce(g1_title_ca,'TOTAL')),'","' order by g2_title_ca, g1_title_ca)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_ca,'TOTAL'),' ◻️ ', coalesce(g1_title_ca,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_ca
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_es,'TOTAL'),' ◻️ ', coalesce(g1_title_es,'TOTAL')),'","' order by g2_title_es, g1_title_es)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_es,'TOTAL'),' ◻️ ', coalesce(g1_title_es,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_es
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_eu,'TOTAL'),' ◻️ ', coalesce(g1_title_eu,'TOTAL')),'","' order by g2_title_eu, g1_title_eu)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_eu,'TOTAL'),' ◻️ ', coalesce(g1_title_eu,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_eu
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_gl,'TOTAL'),' ◻️ ', coalesce(g1_title_gl,'TOTAL')),'","' order by g2_title_gl, g1_title_gl)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_gl,'TOTAL'),' ◻️ ', coalesce(g1_title_gl,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_gl
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_nl,'TOTAL'),' ◻️ ', coalesce(g1_title_nl,'TOTAL')),'","' order by g2_title_nl, g1_title_nl)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_nl,'TOTAL'),' ◻️ ', coalesce(g1_title_nl,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_nl
-    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_fr,'TOTAL'),' ◻️ ', coalesce(g1_title_fr,'TOTAL')),'","' order by g2_title_fr, g1_title_fr)||'"]'
+    , case when count(distinct g2_title)>0 then '["'||string_agg(concat(coalesce(g2_title_fr,'TOTAL'),' ◻️ ', coalesce(g1_title_fr,'TOTAL')),'","' order by g2_title, g1_title)||'"]'
          end as str_list_fr
 
     , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
@@ -178,31 +178,31 @@ select id_campaign
          --   when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_en, g1_title_en)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
           --  when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_en
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_ca, g1_title_ca)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
            -- when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_ca
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_es, g1_title_es)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
            -- when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_es
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_eu, g1_title_eu)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
            -- when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_eu
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_gl, g1_title_gl)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
             --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_gl
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_nl, g1_title_nl)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
            --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_nl
         , case when count(distinct gender)>0 then '['||string_agg(value,',' order by gender)||']'
-            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title_fr, g1_title_fr)||'"]'
+            when count(distinct g2_title)>0 then '["'||string_agg(value,'","' order by g2_title, g1_title)||'"]'
             --when count(distinct i.indicator_id)>0 then  '['||string_agg(distinct value,',' order by value)||']'
             else string_agg(value,'') end as str_value_fr
         , coalesce(i.code, '') as set_code
@@ -232,8 +232,8 @@ select id_campaign
         , max(i.set_instance_name_nl) as set_instance_name_nl
         , max(i.set_instance_name_fr) as set_instance_name_fr
         , ac.instance_number
-        , max(g1_suffix) as g1_suffix
-        , max(g2_suffix) as g2_suffix
+        , string_gg(g1_suffix, '","' order by g1_title) as g1_suffix
+        , string_gg(g2_suffix, '","' order by g2_title) as g2_suffix
 from {{ref('answers_calc')}} ac
     left join (
         select distinct
