@@ -234,7 +234,7 @@ select id_campaign
         , ac.instance_number
         , '["' || string_agg(g1_suffix, '","' order by g2_title, g1_title) ||'"]' as g1_suffix
         , '["' || string_agg(g2_suffix, '","' order by g2_title, g1_title) ||'"]' as g2_suffix
-        , case when count(distinct g2_title)>0 then '["'||string_agg(g2_suffix,' ◻️ ', g1_suffix),'","' order by g2_title, g1_title)||'"]' end as str_suffix
+        , case when count(distinct g2_title)>0 then '["'||string_agg(concat(g2_suffix,' ◻️ ', g1_suffix),'","' order by g2_title, g1_title)||'"]' end as str_suffix
 from {{ref('answers_calc')}} ac
     left join (
         select distinct
