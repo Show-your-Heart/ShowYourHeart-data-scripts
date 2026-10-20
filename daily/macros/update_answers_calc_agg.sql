@@ -12,7 +12,7 @@ with vals as (
 ),
 fin as (
 select v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_survey, v.survey_created_at, v.survey_updated_at, v.status, v.id_method, v.method_name, v.method_description, v.id_user, v.user_name, v.user_surname, v.user_email, v.id_organization, v.organization_name, v.vat_number, v.id_methods_section, v.method_section_title, v.method_order, v.method_level, v.path_order, v.sort_value, v.id_indicator, v.indicator_code, v.indicator_name, v.indicator_description, v.is_direct_indicator, v.indicator_category, v.indicator_data_type, v.indicator_unit, v.gender, v.value, v.num_gender, v.str_gender
-    , v.set_code, v.instance_number
+    , v.set_code, coalesce(v.instance_number,0) as instance_number
 , '['||string_Agg('"'||replace(l.title, '"', '')||'"',',')||']' as str_value
     , '['||string_Agg('"'||replace(l.title_en, '"', '')||'"',',')||']' as str_value_en
     , '['||string_Agg('"'||replace(l.title_ca, '"', '')||'"',',')||']' as str_value_ca
@@ -23,7 +23,7 @@ select v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_su
     , '['||string_Agg('"'||replace(l.title_fr, '"', '')||'"',',')||']' as str_value_fr
 from vals v join {{ source('dwhpublic', 'syh_methods_listitem')}} l on v.val_id=l.id::text
 group by v.id_campaign, v.campaign_name, v."year", v.previous_campaign_id, v.id_survey, v.survey_created_at, v.survey_updated_at, v.status, v.id_method, v.method_name, v.method_description, v.id_user, v.user_name, v.user_surname, v.user_email, v.id_organization, v.organization_name, v.vat_number, v.id_methods_section, v.method_section_title, v.method_order, v.method_level, v.path_order, v.sort_value, v.id_indicator, v.indicator_code, v.indicator_name, v.indicator_description, v.is_direct_indicator, v.indicator_category, v.indicator_data_type, v.indicator_unit, v.gender, v.value, v.num_gender, v.str_gender
-    , v.set_code, v.instance_number
+    , v.set_code, coalesce(v.instance_number,0)
 )
 update {{ this }} set str_value=f.str_value
     , str_value_en=f.str_value_en
@@ -48,6 +48,7 @@ where f.id_campaign={{ this.table }}.id_campaign
 
 with val as (
 select  i.code, sml.title, sml.title_ca , sml.title_es , sml.title_gl , sml.title_eu , sml.title_en , sml.title_fr, sml.title_nl
+, li.sort_value
 from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
 	join {{ source('dwhpublic', 'syh_methods_list')}} l on i.list_options_id = l.id and i.data_type in ('CH', 'R', 'DR')
 	join {{ source('dwhpublic', 'syh_methods_list_items')}} li on l.id = li.list_id
@@ -55,14 +56,14 @@ from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
 )
 , new_list_val as (
 select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
-, '['||string_Agg('"'||replace(val.title, '"', '')||'"',',')||']'  as list_string
-, '['||string_Agg('"'||replace(val.title_ca, '"', '')||'"',',')||']'  as list_string_ca
-, '['||string_Agg('"'||replace(val.title_es, '"', '')||'"',',')||']'  as list_string_es
-, '['||string_Agg('"'||replace(val.title_en, '"', '')||'"',',')||']'  as list_string_en
-, '['||string_Agg('"'||replace(val.title_gl, '"', '')||'"',',')||']'  as list_string_gl
-, '['||string_Agg('"'||replace(val.title_eu, '"', '')||'"',',')||']'  as list_string_eu
-, '['||string_Agg('"'||replace(val.title_nl, '"', '')||'"',',')||']'  as list_string_nl
-, '['||string_Agg('"'||replace(val.title_fr, '"', '')||'"',',')||']'  as list_string_fr
+, '['||string_Agg('"'||replace(val.title, '"', '')||'"',',' order by val.sort_value)||']'  as list_string
+, '['||string_Agg('"'||replace(val.title_ca, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_ca
+, '['||string_Agg('"'||replace(val.title_es, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_es
+, '['||string_Agg('"'||replace(val.title_en, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_en
+, '['||string_Agg('"'||replace(val.title_gl, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_gl
+, '['||string_Agg('"'||replace(val.title_eu, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_eu
+, '['||string_Agg('"'||replace(val.title_nl, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_nl
+, '['||string_Agg('"'||replace(val.title_fr, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_fr
 ,'['||string_Agg('"'||case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then '✅' else '❌' end||'"',',')||']'  as list_value
 from {{ this }} a
 join val on a.indicator_code = val.code
