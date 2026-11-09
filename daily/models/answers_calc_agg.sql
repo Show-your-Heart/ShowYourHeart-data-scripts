@@ -137,7 +137,7 @@ select id_campaign
             when 1 then '"Dones"'
             when 2 then '"No binàries"'
             end::varchar,',' order by gender)||']' end as str_gender_ca
-    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Homes"'
+    , case when count(distinct gender)>0 then '['||string_agg(case gender when 0 then '"Hombres"'
             when 1 then '"Mujeres"'
             when 2 then '"No binarias"'
             end::varchar,',' order by gender)||']' end as str_gender_es
