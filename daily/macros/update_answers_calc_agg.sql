@@ -55,7 +55,7 @@ from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
 	join {{ source('dwhpublic', 'syh_methods_listitem')}} sml on li.listitem_id = sml.id
 )
 , new_list_val as (
-select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
+select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code, instance_number
 , '['||string_Agg('"'||replace(val.title, '"', '')||'"',',' order by val.sort_value)||']'  as list_string
 , '['||string_Agg('"'||replace(val.title_ca, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_ca
 , '['||string_Agg('"'||replace(val.title_es, '"', '')||'"',',' order by val.sort_value)||']'  as list_string_es
@@ -67,7 +67,7 @@ select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indic
 ,'['||string_Agg('"'||case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then '✅' else '❌' end||'"',',')||']'  as list_value
 from {{ this }} a
 join val on a.indicator_code = val.code
-group by id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code
+group by id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code, instance_number
 )
 update {{ this }} set
 	str_list = list_string
