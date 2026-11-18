@@ -50,7 +50,7 @@ with val as (
 select  i.code, sml.title, sml.title_ca , sml.title_es , sml.title_gl , sml.title_eu , sml.title_en , sml.title_fr, sml.title_nl
 , li.sort_value
 from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
-	join {{ source('dwhpublic', 'syh_methods_list')}} l on i.list_options_id = l.id and i.data_type in ('CH', 'R', 'DR')
+	join {{ source('dwhpublic', 'syh_methods_list')}} l on i.list_options_id = l.id and i.data_type in ('CH')
 	join {{ source('dwhpublic', 'syh_methods_list_items')}} li on l.id = li.list_id
 	join {{ source('dwhpublic', 'syh_methods_listitem')}} sml on li.listitem_id = sml.id
 )
@@ -96,6 +96,59 @@ and n.indicator_code = {{this.table}}.indicator_code
 and n.instance_number = {{this.table}}.instance_number
 ;
 
+
+
+-- dropdown i radiobutton només amb 1 resposta possible. No mostrem tot l'array amb la selecció, sinó només el valor triat.
+with val as (
+select  i.code, sml.title, sml.title_ca , sml.title_es , sml.title_gl , sml.title_eu , sml.title_en , sml.title_fr, sml.title_nl
+, li.sort_value
+from  {{ source('dwhpublic', 'syh_methods_indicator')}} i
+	join {{ source('dwhpublic', 'syh_methods_list')}} l on i.list_options_id = l.id and i.data_type in ('DR', 'R')
+	join {{ source('dwhpublic', 'syh_methods_list_items')}} li on l.id = li.list_id
+	join {{ source('dwhpublic', 'syh_methods_listitem')}} sml on li.listitem_id = sml.id
+)
+, new_list_val as (
+select id_organization, id_campaign, id_method, a.id_project, a.id_survey, indicator_code, instance_number
+, replace(val.title, '"', '') as list_string
+, replace(val.title_ca, '"', '') as list_string_ca
+, replace(val.title_es, '"', '') as list_string_es
+, replace(val.title_en, '"', '') as list_string_en
+, replace(val.title_gl, '"', '') as list_string_gl
+, replace(val.title_eu, '"', '') as list_string_eu
+, replace(val.title_nl, '"', '') as list_string_nl
+, replace(val.title_fr, '"', '') as list_string_fr
+, case when concat('%', str_value, '%') like concat('%"', val.title, '"%') then '✅' else '❌' end as list_value
+from {{ this }} a
+join val on a.indicator_code = val.code
+-- agafem només aquelles que coincideix el valor (només ha de ser una fila)
+where concat('%', str_value, '%') like concat('%"', val.title, '"%')
+)
+update {{ this }} set
+	str_value = list_string
+	, str_value_ca = list_string_ca
+	, str_value_es = list_string_es
+	, str_value_gl = list_string_gl
+	, str_value_eu = list_string_eu
+	, str_value_en = list_string_en
+	, str_value_fr = list_string_fr
+	, str_value_nl = list_string_nl
+--	, str_value=list_value
+--	, str_value_ca=list_value
+--	, str_value_es=list_value
+--	, str_value_gl=list_value
+--	, str_value_eu=list_value
+--	, str_value_en=list_value
+--	, str_value_fr=list_value
+--	, str_value_nl=list_value
+from new_list_val n
+where n.id_organization = {{this.table}}.id_organization
+and n.id_campaign = {{this.table}}.id_campaign
+and n.id_method = {{this.table}}.id_method
+and (n.id_project = {{this.table}}.id_project or (n.id_project is null and {{this.table}}.id_project is null))
+and n.id_survey = {{this.table}}.id_survey
+and n.indicator_code = {{this.table}}.indicator_code
+and n.instance_number = {{this.table}}.instance_number
+;
 
 
 commit;
