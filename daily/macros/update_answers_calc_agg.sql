@@ -92,7 +92,9 @@ and n.id_campaign = {{this.table}}.id_campaign
 and n.id_method = {{this.table}}.id_method
 and (n.id_project = {{this.table}}.id_project or (n.id_project is null and {{this.table}}.id_project is null))
 and n.id_survey = {{this.table}}.id_survey
-and n.indicator_code = {{this.table}}.indicator_code;
+and n.indicator_code = {{this.table}}.indicator_code
+and n.instance_number = {{this.table}}.instance_number
+;
 
 
 
